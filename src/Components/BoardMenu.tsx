@@ -38,11 +38,14 @@ const Wrapper = styled.div`
   background-color: white;
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
-  /* z-index: 105; */
+  justify-content: center;
   opacity: 1;
   padding: 1em;
   width: 65vw;
+  h5 {
+    margin: 0;
+    padding: 0.5em 0;
+  }
 `;
 
 export default BoardMenu;

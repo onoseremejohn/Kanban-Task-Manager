@@ -5,7 +5,13 @@ import {
   BoardType,
   ViewTaskPayload,
 } from "./types";
-import { LOAD } from "./actions";
+import {
+  LOAD,
+  OPENBOARDMENU,
+  CLOSEMODAL,
+  SELECTBOARD,
+  VIEWTASK,
+} from "./actions";
 
 const reducer: ReducerType<StateType, ActionType> = (
   state: StateType,
@@ -25,13 +31,13 @@ const reducer: ReducerType<StateType, ActionType> = (
         currentBoardId: boardIds[0],
       };
     }
-    case "OPEN": {
+    case OPENBOARDMENU: {
       return { ...state, showBoardMenu: true };
     }
-    case "CLOSE": {
+    case CLOSEMODAL: {
       return { ...state, showBoardMenu: false, viewTask: false };
     }
-    case "SELECT": {
+    case SELECTBOARD: {
       let { currentBoardId } = state;
       const id = action.payload;
       if ((id || id === 0) && typeof id !== "object") {
@@ -39,13 +45,14 @@ const reducer: ReducerType<StateType, ActionType> = (
       }
       return { ...state, currentBoardId };
     }
-    case "VIEWTASK": {
+    case VIEWTASK: {
       const { boards, currentBoardId } = state;
       const { columnId, taskId } = action.payload as ViewTaskPayload;
       const board = boards?.find((board) => board.id === currentBoardId);
+      const statusIds = board?.columns.map((c) => c.id);
       const column = board?.columns.find((c) => c.id === columnId);
       const task = column?.tasks.find((t) => t.id === taskId);
-      return { ...state, selectedTask: task };
+      return { ...state, viewTask: true, selectedTask: { task, statusIds } };
     }
     default:
       throw new Error(`No Matching "${action.type}" - action type`);

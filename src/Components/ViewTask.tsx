@@ -2,41 +2,54 @@ import styled from "styled-components";
 import { Close } from "../assets/Icons";
 import { forwardRef } from "react";
 import { useGlobalContext } from "../AppContext";
+import { statusName, countCompletedSubtasks } from "../helpers";
 const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
-  const { closeModal = () => {}, selectedTask } = useGlobalContext() || {};
-  // const {} = selectedTask
+  const {
+    closeModal = () => {},
+    selectedTask,
+    boards,
+    currentBoardId,
+  } = useGlobalContext() || {};
+  if (!selectedTask?.task) return null;
+  const { title, description, status, subtasks } = selectedTask.task;
+  const { statusIds } = selectedTask;
   return (
     <Wrapper ref={ref}>
       <button
         type="button"
         className="close"
         onClick={(e) => {
-          console.log("jdhd");
           closeModal();
           e.stopPropagation();
         }}
       >
         <Close />
       </button>
-      <h4>Build Ui for serach</h4>
-      <p>desctiption</p>
-      <h6>Subtasts (1 of 2)</h6>
-      <label>
-        <input type="checkbox" />
-        Inrternal testing
-      </label>
-      <label>
-        <input type="checkbox" />
-        Externl testing
-      </label>
+      <h4>{title}</h4>
+      <p>{description || "no description"}</p>
+      <h6>
+        Subtasts ({countCompletedSubtasks(subtasks)} of {subtasks.length})
+      </h6>
+      {subtasks.map((s) => {
+        return (
+          <label key={s.id}>
+            <input type="checkbox" checked={s.isCompleted} />
+            {s.title}
+          </label>
+        );
+      })}
       <h6>Current Status</h6>
       <button type="button" className="status">
-        Todo
+        {status}
       </button>
       <div className="dropdown">
-        <button type="button">Todo</button>
-        <button type="button">Doing</button>
-        <button type="button">Done</button>
+        {statusIds?.map((id) => {
+          return (
+            <button type="button" key={id}>
+              {statusName(boards, currentBoardId, id)}
+            </button>
+          );
+        })}
       </div>
     </Wrapper>
   );

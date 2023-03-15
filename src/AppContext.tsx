@@ -14,7 +14,13 @@ import {
 } from "react";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import reducer from "./reducer";
-import { LOAD } from "./actions";
+import {
+  LOAD,
+  OPENBOARDMENU,
+  CLOSEMODAL,
+  SELECTBOARD,
+  VIEWTASK,
+} from "./actions";
 import { StateType, Id } from "./types";
 const lightTheme = {
   body: "#FFF",
@@ -41,10 +47,10 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     theme: "light",
     boards: [],
     showBoardMenu: false,
-    viewTask: true,
+    viewTask: false,
     boardIds: [],
     currentBoardId: "",
-    selectedTask: null,
+    selectedTask: { task: null, statusIds: [] },
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const isLight = state.theme === "light";
@@ -57,18 +63,27 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
-  const openBoardMenu = () => dispatch({ type: "OPEN" });
+  const openBoardMenu = () => dispatch({ type: OPENBOARDMENU });
 
-  const closeModal = () => dispatch({ type: "CLOSE" });
+  const closeModal = () => dispatch({ type: CLOSEMODAL });
 
-  const selectBoard = (id: Id) => dispatch({ type: "SELECT", payload: id });
+  const selectBoard = (id: Id) => dispatch({ type: SELECTBOARD, payload: id });
 
   const openTask = (columnId: Id, taskId: Id) =>
-    dispatch({ type: "VIEWTASK", payload: { columnId, taskId } });
+    dispatch({ type: VIEWTASK, payload: { columnId, taskId } });
+
+  const editTask = () => {};
 
   return (
     <AppContext.Provider
-      value={{ ...state, openBoardMenu, closeModal, selectBoard, openTask }}
+      value={{
+        ...state,
+        openBoardMenu,
+        closeModal,
+        selectBoard,
+        openTask,
+        editTask,
+      }}
     >
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>
         <GlobalStyles />
