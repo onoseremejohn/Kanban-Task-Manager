@@ -1,12 +1,18 @@
 import { type } from "os";
+import { ChangeEvent } from "react";
 export type Id = string | number;
 export interface ViewTaskPayload {
   columnId: Id;
   taskId: Id;
 }
+export interface ToggleSubtaskPayload {
+  e: ChangeEvent<HTMLInputElement>;
+  id: Id;
+}
+
 export interface ActionType {
   type: string;
-  payload?: ViewTaskPayload | Id;
+  payload?: ViewTaskPayload | Id | ToggleSubtaskPayload;
 }
 
 export interface StateType {
@@ -16,12 +22,13 @@ export interface StateType {
   currentBoardId: Id;
   showBoardMenu: boolean;
   viewTask: boolean;
-  selectedTask?: { task?: TasksType | null; statusIds?: Id[] };
-  openBoardMenu?: () => void;
-  closeModal?: () => void;
-  selectBoard?: (a: Id) => void;
-  openTask?: (a: Id, b: Id) => void;
-  editTask?: () => void;
+  selectedTask: { task?: TasksType | null; statusIds?: Id[]; columnId: Id };
+  openBoardMenu?(): void;
+  closeModal?(): void;
+  selectBoard?(a: Id): void;
+  openTask?(a: Id, b: Id): void;
+  toggleSubtask?(s: ChangeEvent<HTMLInputElement>, b: Id): void;
+  changeStatus?(a: Id): void;
 }
 
 export type ReducerType<S, A> = (state: S, action: A) => StateType;
@@ -31,7 +38,7 @@ export interface TasksType {
   title: string;
   description: string;
   status: string;
-  statusId: number;
+  statusId: Id;
   subtasks: { title: string; isCompleted: boolean; id: Id }[];
   columnId?: Id;
 }

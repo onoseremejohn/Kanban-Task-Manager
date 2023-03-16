@@ -11,7 +11,7 @@ const SingleTask = ({
   return (
     <article
       role="button"
-      aria-label="edit task"
+      aria-label="view task"
       onClick={(e) => {
         openTask(columnId, taskId);
         e.stopPropagation();

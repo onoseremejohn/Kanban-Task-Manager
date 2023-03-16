@@ -11,6 +11,7 @@ import {
   ReactNode,
   useReducer,
   useEffect,
+  ChangeEvent,
 } from "react";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import reducer from "./reducer";
@@ -20,6 +21,8 @@ import {
   CLOSEMODAL,
   SELECTBOARD,
   VIEWTASK,
+  TOGGLESUBTASK,
+  CHANGESTATUS,
 } from "./actions";
 import { StateType, Id } from "./types";
 const lightTheme = {
@@ -50,7 +53,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     viewTask: false,
     boardIds: [],
     currentBoardId: "",
-    selectedTask: { task: null, statusIds: [] },
+    selectedTask: { task: null, statusIds: [], columnId: 0 },
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const isLight = state.theme === "light";
@@ -72,7 +75,13 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const openTask = (columnId: Id, taskId: Id) =>
     dispatch({ type: VIEWTASK, payload: { columnId, taskId } });
 
-  const editTask = () => {};
+  const toggleSubtask = (e: ChangeEvent<HTMLInputElement>, id: Id) => {
+    dispatch({ type: TOGGLESUBTASK, payload: { e, id } });
+  };
+
+  const changeStatus = (id: Id) => {
+    dispatch({ type: CHANGESTATUS, payload: id });
+  };
 
   return (
     <AppContext.Provider
@@ -82,7 +91,8 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         closeModal,
         selectBoard,
         openTask,
-        editTask,
+        toggleSubtask,
+        changeStatus,
       }}
     >
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

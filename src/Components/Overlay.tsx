@@ -12,7 +12,7 @@ const Overlay = () => {
   } = useGlobalContext() || {};
   const show = showBoardMenu || viewTask;
   useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
+    const handleClick = (event: Event) => {
       if (show && !articleRef.current?.contains(event.target as Node)) {
         closeModal();
       }

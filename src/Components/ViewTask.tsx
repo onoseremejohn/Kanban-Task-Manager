@@ -1,20 +1,28 @@
 import styled from "styled-components";
 import { Close } from "../assets/Icons";
-import { forwardRef } from "react";
+import { forwardRef, useState, useRef, MouseEvent, TouchEvent } from "react";
 import { useGlobalContext } from "../AppContext";
 import { statusName, countCompletedSubtasks } from "../helpers";
 const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
+  const showRef = useRef<HTMLDivElement>(null);
   const {
     closeModal = () => {},
     selectedTask,
     boards,
     currentBoardId,
+    toggleSubtask = () => {},
+    changeStatus = () => {},
   } = useGlobalContext() || {};
   if (!selectedTask?.task) return null;
   const { title, description, status, subtasks } = selectedTask.task;
   const { statusIds } = selectedTask;
+  const [show, setShow] = useState(false);
+  const toggleShow = () => setShow((s) => !s);
+  const closeShow = (e: MouseEvent | TouchEvent) => {
+    if (show && !showRef.current?.contains(e.target as Node)) setShow(false);
+  };
   return (
-    <Wrapper ref={ref}>
+    <Wrapper ref={ref} onClick={closeShow}>
       <button
         type="button"
         className="close"
@@ -33,24 +41,38 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
       {subtasks.map((s) => {
         return (
           <label key={s.id}>
-            <input type="checkbox" checked={s.isCompleted} />
+            <input
+              type="checkbox"
+              checked={s.isCompleted}
+              onChange={(e) => toggleSubtask(e, s.id)}
+            />
             {s.title}
           </label>
         );
       })}
       <h6>Current Status</h6>
-      <button type="button" className="status">
+      <button type="button" className="status" onClick={toggleShow}>
         {status}
       </button>
-      <div className="dropdown">
-        {statusIds?.map((id) => {
-          return (
-            <button type="button" key={id}>
-              {statusName(boards, currentBoardId, id)}
-            </button>
-          );
-        })}
-      </div>
+      {show && (
+        <div className="dropdown" ref={showRef}>
+          {statusIds?.map((id) => {
+            return (
+              <button
+                type="button"
+                key={id}
+                onClick={(e) => {
+                  setShow(false);
+                  changeStatus(id);
+                  e.stopPropagation();
+                }}
+              >
+                {statusName(boards, currentBoardId, id)}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </Wrapper>
   );
 });

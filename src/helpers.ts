@@ -21,5 +21,3 @@ export const statusName: StatusName = (boards, boardId, id) => {
   const col = board?.columns.find((c) => c.id === id);
   return col?.name;
 };
-
-// class Task
