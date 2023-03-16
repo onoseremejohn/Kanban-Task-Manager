@@ -22,6 +22,7 @@ export interface StateType {
   currentBoardId: Id;
   showBoardMenu: boolean;
   viewTask: boolean;
+  modifyTask: boolean;
   selectedTask: { task?: TasksType | null; statusIds?: Id[]; columnId: Id };
   openBoardMenu?(): void;
   closeModal?(): void;

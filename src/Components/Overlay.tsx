@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import BoardMenu from "../Components/BoardMenu";
 import ViewTask from "./ViewTask";
+import AddNewTask from "./AddNewTask";
 import { useGlobalContext } from "../AppContext";
 import { useEffect, useRef } from "react";
 const Overlay = () => {
@@ -8,15 +9,17 @@ const Overlay = () => {
   const {
     viewTask,
     showBoardMenu,
+    modifyTask,
     closeModal = () => {},
   } = useGlobalContext() || {};
-  const show = showBoardMenu || viewTask;
+  const show = showBoardMenu || viewTask || modifyTask;
   useEffect(() => {
     const handleClick = (event: Event) => {
       if (show && !articleRef.current?.contains(event.target as Node)) {
         closeModal();
       }
     };
+    console.log(articleRef);
 
     window.addEventListener("click", handleClick);
     return () => {
@@ -27,6 +30,7 @@ const Overlay = () => {
     <Wrapper show={show}>
       {showBoardMenu && <BoardMenu ref={articleRef} />}
       {viewTask && <ViewTask ref={articleRef} />}
+      {modifyTask && <AddNewTask ref={articleRef} />}
     </Wrapper>
   );
 };

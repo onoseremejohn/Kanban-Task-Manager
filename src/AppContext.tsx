@@ -51,6 +51,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     boards: [],
     showBoardMenu: false,
     viewTask: false,
+    modifyTask: false,
     boardIds: [],
     currentBoardId: "",
     selectedTask: { task: null, statusIds: [], columnId: 0 },
