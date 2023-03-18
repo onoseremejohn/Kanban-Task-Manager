@@ -1,10 +1,11 @@
 import styled from "styled-components";
-import { Close } from "../assets/Icons";
+import { Close, MenuIcon } from "../assets/Icons";
 import { forwardRef, useState, useRef, MouseEvent, TouchEvent } from "react";
 import { useGlobalContext } from "../AppContext";
 import { statusName, countCompletedSubtasks } from "../helpers";
 const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
   const showRef = useRef<HTMLDivElement>(null);
+  const modifyRef = useRef<HTMLDivElement>(null);
   const {
     closeModal = () => {},
     selectedTask,
@@ -12,14 +13,20 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
     currentBoardId,
     toggleSubtask = () => {},
     changeStatus = () => {},
+    modify = () => {},
   } = useGlobalContext() || {};
   if (!selectedTask?.task) return null;
   const { title, description, status, subtasks } = selectedTask.task;
   const { statusIds } = selectedTask;
-  const [show, setShow] = useState(false);
-  const toggleShow = () => setShow((s) => !s);
+  const [showStatuses, setShowStatuses] = useState(false);
+  const [modifyTask, setmodifyTask] = useState(false);
+  const toggleShow = () => setShowStatuses((s) => !s);
+  const toggleModify = () => setmodifyTask((s) => !s);
   const closeShow = (e: MouseEvent | TouchEvent) => {
-    if (show && !showRef.current?.contains(e.target as Node)) setShow(false);
+    if (showStatuses && !showRef.current?.contains(e.target as Node))
+      setShowStatuses(false);
+    if (modifyTask && !modifyRef.current?.contains(e.target as Node))
+      setmodifyTask(false);
   };
   return (
     <Wrapper ref={ref} onClick={closeShow}>
@@ -33,7 +40,38 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
       >
         <Close />
       </button>
-      <h4>{title}</h4>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "0.75rem",
+          position: "relative",
+        }}
+      >
+        <h4>{title}</h4>
+        <button type="button" style={{ padding: "8px" }} onClick={toggleModify}>
+          <MenuIcon />
+        </button>
+        {modifyTask && (
+          <div
+            style={{ position: "absolute" }}
+            className="modifyTask"
+            ref={modifyRef}
+          >
+            <button
+              type="button"
+              onClick={(e) => {
+                modify();
+                e.stopPropagation();
+              }}
+            >
+              Edit task
+            </button>
+            <button type="button">Delete task</button>
+          </div>
+        )}
+      </div>
       <p>{description || "no description"}</p>
       <h6>
         Subtasts ({countCompletedSubtasks(subtasks)} of {subtasks.length})
@@ -51,28 +89,30 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
         );
       })}
       <h6>Current Status</h6>
-      <button type="button" className="status" onClick={toggleShow}>
-        {status}
-      </button>
-      {show && (
-        <div className="dropdown" ref={showRef}>
-          {statusIds?.map((id) => {
-            return (
-              <button
-                type="button"
-                key={id}
-                onClick={(e) => {
-                  setShow(false);
-                  changeStatus(id);
-                  e.stopPropagation();
-                }}
-              >
-                {statusName(boards, currentBoardId, id)}
-              </button>
-            );
-          })}
-        </div>
-      )}
+      <div style={{ position: "relative" }}>
+        <button type="button" className="status" onClick={toggleShow}>
+          {status}
+        </button>
+        {showStatuses && (
+          <div className="dropdown" ref={showRef}>
+            {statusIds?.map((id) => {
+              return (
+                <button
+                  type="button"
+                  key={id}
+                  onClick={(e) => {
+                    setShowStatuses(false);
+                    changeStatus(id);
+                    e.stopPropagation();
+                  }}
+                >
+                  {statusName(boards, currentBoardId, id)}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </Wrapper>
   );
 });
@@ -85,7 +125,7 @@ export const Wrapper = styled.div`
   transform: translateX(-50%);
   min-height: 70vh;
   width: 85vw;
-  padding: 2.5em 1.5em;
+  padding: 2.85em 1.5em;
   border-radius: var(--radius);
   label {
     display: flex;
@@ -98,6 +138,9 @@ export const Wrapper = styled.div`
   }
   p {
     margin-bottom: 1.5em;
+  }
+  h4 {
+    margin-bottom: 0;
   }
   h6 {
     margin-bottom: 0.5em;
@@ -116,8 +159,8 @@ export const Wrapper = styled.div`
   }
   .close {
     position: absolute;
-    right: 15px;
-    top: 15px;
+    right: 3%;
+    top: 1.5%;
     background: rgba(8, 8, 8, 0.1);
     padding: 0.4em;
     border-radius: var(--radius);
@@ -129,11 +172,28 @@ export const Wrapper = styled.div`
     flex-direction: column;
     align-items: start;
     box-shadow: var(--bs);
-    /* padding: 1em 0em; */
+    position: absolute;
+    top: calc(100% + 0.5em);
+    width: 100%;
+    background-color: white;
     button {
       width: 100%;
       text-align: start;
       padding: 0.5em 1em;
+    }
+  }
+  .modifyTask {
+    top: 105%;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--bs);
+    /* padding: 1em; */
+    button {
+      font-size: 1rem;
+      text-align: left;
+      padding: 0.5em 1em;
+      background-color: white;
     }
   }
 `;

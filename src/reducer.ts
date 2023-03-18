@@ -16,6 +16,7 @@ import {
   VIEWTASK,
   TOGGLESUBTASK,
   CHANGESTATUS,
+  MODIFYTASK,
 } from "./actions";
 // import { cloneDeep } from "lodash";
 import { statusName } from "./helpers";
@@ -42,7 +43,13 @@ const reducer: ReducerType<StateType, ActionType> = (
       return { ...state, showBoardMenu: true };
     }
     case CLOSEMODAL: {
-      return { ...state, showBoardMenu: false, viewTask: false };
+      return {
+        ...state,
+        showBoardMenu: false,
+        viewTask: false,
+        modifyTask: false,
+        selectedTask: { task: null, statusIds: [], columnId: 0 },
+      };
     }
     case SELECTBOARD: {
       let { currentBoardId } = state;
@@ -114,7 +121,7 @@ const reducer: ReducerType<StateType, ActionType> = (
         selectedTask: { task, columnId },
       } = state;
       const newStatus = statusName(boards, currentBoardId, id);
-      if (!newStatus || !task) return state;
+      if (!newStatus || !task || id === columnId) return state;
       let newTask: TasksType;
       newTask = { ...task, status: newStatus, statusId: id };
       let newBoards = [...boards];
@@ -140,6 +147,9 @@ const reducer: ReducerType<StateType, ActionType> = (
         selectedTask: { ...state.selectedTask, task: newTask, columnId: id },
         boards: newBoards,
       };
+    }
+    case MODIFYTASK: {
+      return { ...state, modifyTask: true, viewTask: false };
     }
     default:
       throw new Error(`No Matching "${action.type}" - action type`);

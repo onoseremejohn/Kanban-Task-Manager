@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import BoardMenu from "../Components/BoardMenu";
 import ViewTask from "./ViewTask";
-import AddNewTask from "./AddNewTask";
+import AddNewTask from "./ModifyTask";
 import { useGlobalContext } from "../AppContext";
 import { useEffect, useRef } from "react";
 const Overlay = () => {
@@ -19,8 +19,6 @@ const Overlay = () => {
         closeModal();
       }
     };
-    console.log(articleRef);
-
     window.addEventListener("click", handleClick);
     return () => {
       window.removeEventListener("click", handleClick);

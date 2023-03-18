@@ -8,9 +8,10 @@ import { findBoard } from "../helpers";
 
 const Header = () => {
   const {
-    openBoardMenu = () => {},
     currentBoardId,
     boards,
+    openBoardMenu = () => {},
+    modify = () => {},
   } = useGlobalContext() || {};
   const currentBoard = findBoard(boards, currentBoardId);
   return (
@@ -19,6 +20,7 @@ const Header = () => {
         <div className="gap">
           <img src={logo} alt="LOGO" />
           <button
+            type="button"
             className="board font-bold"
             onClick={(e) => {
               openBoardMenu();
@@ -29,10 +31,17 @@ const Header = () => {
           </button>
         </div>
         <div>
-          <button type="button" className="plus">
+          <button
+            type="button"
+            className="plus"
+            onClick={(e) => {
+              modify();
+              e.stopPropagation();
+            }}
+          >
             <FiPlus style={{ color: "white" }} />
           </button>
-          <button>
+          <button type="button">
             <BsThreeDotsVertical />
           </button>
         </div>

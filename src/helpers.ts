@@ -8,7 +8,9 @@ interface FindBoard {
   (a: BoardType[] | undefined, b: Id | undefined): string | undefined;
 }
 interface StatusName {
-  (a: BoardType[] | undefined, b: Id | undefined, c: Id): string | undefined;
+  (a: BoardType[] | undefined, b: Id | undefined, c: Id | undefined):
+    | string
+    | undefined;
 }
 
 export const findBoard: FindBoard = (boards, id) => {

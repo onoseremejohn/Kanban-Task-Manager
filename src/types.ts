@@ -30,6 +30,7 @@ export interface StateType {
   openTask?(a: Id, b: Id): void;
   toggleSubtask?(s: ChangeEvent<HTMLInputElement>, b: Id): void;
   changeStatus?(a: Id): void;
+  modify?(): void;
 }
 
 export type ReducerType<S, A> = (state: S, action: A) => StateType;
