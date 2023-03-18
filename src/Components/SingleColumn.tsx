@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import SingleTask from "./SingleITask";
+import SingleTask from "./SingleTask";
 import { ColumnType } from "../types";
 const SingleColumn = ({ name, tasks, id }: ColumnType) => {
   return (

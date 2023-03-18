@@ -19,6 +19,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
     selectedTask,
     boards,
     currentBoardId,
+    editTask = () => {},
   } = useGlobalContext() || {};
   const task = selectedTask?.task;
   const statusIds = boards
@@ -38,6 +39,8 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
       isCompleted: false,
     },
   ];
+
+  const [tempStatusId, setTempStatusId] = useState(columnId);
 
   const [info, setInfo] = task
     ? useState({ title: task.title, description: task.description })
@@ -85,7 +88,34 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
     setSubtasks(updated);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {};
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const status = statusName(boards, currentBoardId, tempStatusId);
+    let payload: TasksType;
+    if (task && status && (tempStatusId || tempStatusId == 0)) {
+      payload = {
+        ...task,
+        title: info.title,
+        description: info.description,
+        status,
+        statusId: tempStatusId,
+        subtasks,
+      };
+      editTask(payload, true);
+      return;
+    } else if (!task && status && (tempStatusId || tempStatusId == 0)) {
+      payload = {
+        id: nanoid(),
+        title: info.title,
+        description: info.description,
+        status,
+        statusId: tempStatusId,
+        subtasks,
+      };
+      editTask(payload, false);
+      return;
+    }
+  };
 
   return (
     <Wrapper ref={ref} onClick={closeShow}>
@@ -100,7 +130,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
         <Close />
       </button>
       <h4>{task ? "Edit Task" : "Add New Task"}</h4>
-      <form onSubmit={(s) => {}}>
+      <form onSubmit={handleSubmit}>
         <div className="form-control">
           <label htmlFor="title">Title</label>
           <input
@@ -166,7 +196,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
         <div className="form-control" style={{ position: "relative" }}>
           <label>Status</label>
           <button type="button" className="status" onClick={toggleShow}>
-            {statusName(boards, currentBoardId, columnId)}
+            {statusName(boards, currentBoardId, tempStatusId)}
           </button>
           {show && (
             <div className="dropdown" ref={showRef}>
@@ -176,8 +206,8 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
                     type="button"
                     key={id}
                     onClick={(e) => {
+                      setTempStatusId(id);
                       setShow(false);
-                      //   changeStatus(id);
                       e.stopPropagation();
                     }}
                   >
@@ -189,7 +219,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
           )}
         </div>
         <button type="submit" className="submit">
-          Create Task
+          {task ? "Save Changes" : "Create Task"}
         </button>
       </form>
     </Wrapper>

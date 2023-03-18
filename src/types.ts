@@ -9,10 +9,14 @@ export interface ToggleSubtaskPayload {
   e: ChangeEvent<HTMLInputElement>;
   id: Id;
 }
+export interface EditTaskPayload {
+  task: TasksType;
+  val: Boolean;
+}
 
 export interface ActionType {
   type: string;
-  payload?: ViewTaskPayload | Id | ToggleSubtaskPayload;
+  payload?: ViewTaskPayload | Id | ToggleSubtaskPayload | EditTaskPayload;
 }
 
 export interface StateType {
@@ -28,9 +32,10 @@ export interface StateType {
   closeModal?(): void;
   selectBoard?(a: Id): void;
   openTask?(a: Id, b: Id): void;
-  toggleSubtask?(s: ChangeEvent<HTMLInputElement>, b: Id): void;
+  toggleSubtask?(a: ChangeEvent<HTMLInputElement>, b: Id): void;
   changeStatus?(a: Id): void;
   modify?(): void;
+  editTask?(a: TasksType, b: Boolean): void;
 }
 
 export type ReducerType<S, A> = (state: S, action: A) => StateType;

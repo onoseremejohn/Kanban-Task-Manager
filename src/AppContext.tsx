@@ -24,8 +24,9 @@ import {
   TOGGLESUBTASK,
   CHANGESTATUS,
   MODIFYTASK,
+  EDITTASK,
 } from "./actions";
-import { StateType, Id } from "./types";
+import { StateType, Id, TasksType } from "./types";
 const lightTheme = {
   body: "#FFF",
   text: "#363537",
@@ -77,7 +78,10 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const changeStatus = (id: Id) => {
     dispatch({ type: CHANGESTATUS, payload: id });
   };
-  const modify = () => dispatch({ type: MODIFYTASK});
+  const modify = () => dispatch({ type: MODIFYTASK });
+
+  const editTask = (task: TasksType, val: Boolean) =>
+    dispatch({ type: EDITTASK, payload: { task, val } });
 
   return (
     <AppContext.Provider
@@ -90,6 +94,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         toggleSubtask,
         changeStatus,
         modify,
+        editTask,
       }}
     >
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

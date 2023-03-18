@@ -6,3 +6,4 @@ export const VIEWTASK = "VIEWTASK";
 export const TOGGLESUBTASK = "TOGGLESUBTASK";
 export const CHANGESTATUS = "CHANGESTATUS";
 export const MODIFYTASK = "MODIFYTASK";
+export const EDITTASK = "EDITTASK";

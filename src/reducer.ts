@@ -7,6 +7,7 @@ import {
   ToggleSubtaskPayload,
   TasksType,
   Id,
+  EditTaskPayload,
 } from "./types";
 import {
   LOAD,
@@ -17,6 +18,7 @@ import {
   TOGGLESUBTASK,
   CHANGESTATUS,
   MODIFYTASK,
+  EDITTASK,
 } from "./actions";
 // import { cloneDeep } from "lodash";
 import { statusName } from "./helpers";
@@ -54,7 +56,7 @@ const reducer: ReducerType<StateType, ActionType> = (
     case SELECTBOARD: {
       let { currentBoardId } = state;
       const id = action.payload;
-      if ((id || id === 0) && typeof id !== "object") {
+      if ((id || id == 0) && typeof id !== "object") {
         currentBoardId = id;
       }
       return { ...state, currentBoardId };
@@ -90,7 +92,7 @@ const reducer: ReducerType<StateType, ActionType> = (
       };
       let newBoards = [...boards];
       newBoards = newBoards.map((board) => {
-        if (board.id === currentBoardId) {
+        if (board.id === currentBoardId)
           return {
             ...board,
             columns: board.columns.map((c) => {
@@ -105,7 +107,7 @@ const reducer: ReducerType<StateType, ActionType> = (
               else return c;
             }),
           };
-        } else return board;
+        else return board;
       });
       return {
         ...state,
@@ -126,7 +128,7 @@ const reducer: ReducerType<StateType, ActionType> = (
       newTask = { ...task, status: newStatus, statusId: id };
       let newBoards = [...boards];
       newBoards = newBoards.map((board) => {
-        if (board.id === currentBoardId) {
+        if (board.id === currentBoardId)
           return {
             ...board,
             columns: board.columns.map((c) => {
@@ -140,7 +142,7 @@ const reducer: ReducerType<StateType, ActionType> = (
               else return c;
             }),
           };
-        } else return board;
+        else return board;
       });
       return {
         ...state,
@@ -150,6 +152,58 @@ const reducer: ReducerType<StateType, ActionType> = (
     }
     case MODIFYTASK: {
       return { ...state, modifyTask: true, viewTask: false };
+    }
+    case EDITTASK: {
+      const { task, val } = action.payload as EditTaskPayload;
+      const {
+        boards,
+        currentBoardId,
+        selectedTask: { columnId },
+      } = state;
+      let newBoards = [...boards];
+      if (val) {
+        newBoards = newBoards.map((b) => {
+          if (b.id === currentBoardId)
+            return {
+              ...b,
+              columns: b.columns.map((c) => {
+                if (c.id !== task.statusId) {
+                  if (c.id === columnId)
+                    return {
+                      ...c,
+                      tasks: c.tasks.filter((t) => t.id !== task.id),
+                    };
+                  else return c;
+                } else {
+                  if (c.id === columnId)
+                    return {
+                      ...c,
+                      tasks: c.tasks.map((t) => {
+                        if (t.id === task.id) return task;
+                        else return t;
+                      }),
+                    };
+                  else return { ...c, tasks: [...c.tasks, task] };
+                }
+              }),
+            };
+          else return b;
+        });
+      } else {
+        newBoards = newBoards.map((b) => {
+          if (b.id === currentBoardId)
+            return {
+              ...b,
+              columns: b.columns.map((c) => {
+                if (c.id === task.statusId)
+                  return { ...c, tasks: [...c.tasks, task] };
+                else return c;
+              }),
+            };
+          else return b;
+        });
+      }
+      return { ...state, boards: newBoards };
     }
     default:
       throw new Error(`No Matching "${action.type}" - action type`);
