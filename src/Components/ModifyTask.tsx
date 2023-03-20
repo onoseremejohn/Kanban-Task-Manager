@@ -102,7 +102,6 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
         subtasks,
       };
       editTask(payload, true);
-      return;
     } else if (!task && status && (tempStatusId || tempStatusId == 0)) {
       payload = {
         id: nanoid(),
@@ -113,8 +112,8 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
         subtasks,
       };
       editTask(payload, false);
-      return;
     }
+    closeModal();
   };
 
   return (
@@ -234,12 +233,12 @@ const Wrapper = styled.div`
   transform: translateX(-50%);
   min-height: 70vh;
   width: 85vw;
-  padding: 2.5em 1.5em;
+  padding: 2.85em 1.5em;
   border-radius: var(--radius);
   .close {
     position: absolute;
-    right: 15px;
-    top: 15px;
+    right: 3%;
+    top: 1.5%;
     background: rgba(8, 8, 8, 0.1);
     padding: 0.4em;
     border-radius: var(--radius);
@@ -249,7 +248,6 @@ const Wrapper = styled.div`
   form {
     display: flex;
     flex-direction: column;
-    /* align-items: start; */
     gap: 1em;
   }
   .form-control {

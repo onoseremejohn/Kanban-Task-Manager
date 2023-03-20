@@ -27,6 +27,7 @@ export interface StateType {
   showBoardMenu: boolean;
   viewTask: boolean;
   modifyTask: boolean;
+  deleteWarning: boolean;
   selectedTask: { task?: TasksType | null; statusIds?: Id[]; columnId: Id };
   openBoardMenu?(): void;
   closeModal?(): void;
@@ -34,8 +35,9 @@ export interface StateType {
   openTask?(a: Id, b: Id): void;
   toggleSubtask?(a: ChangeEvent<HTMLInputElement>, b: Id): void;
   changeStatus?(a: Id): void;
-  modify?(): void;
+  modify?(a?: string): void;
   editTask?(a: TasksType, b: Boolean): void;
+  deleteTask?(a:Id): void;
 }
 
 export type ReducerType<S, A> = (state: S, action: A) => StateType;

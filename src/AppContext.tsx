@@ -25,6 +25,8 @@ import {
   CHANGESTATUS,
   MODIFYTASK,
   EDITTASK,
+  DELETETASK,
+  FILTERDELETE,
 } from "./actions";
 import { StateType, Id, TasksType } from "./types";
 const lightTheme = {
@@ -57,6 +59,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     boardIds: [],
     currentBoardId: "",
     selectedTask: { task: null, statusIds: [], columnId: 0 },
+    deleteWarning: false,
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const isLight = state.theme === "light";
@@ -78,10 +81,13 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const changeStatus = (id: Id) => {
     dispatch({ type: CHANGESTATUS, payload: id });
   };
-  const modify = () => dispatch({ type: MODIFYTASK });
-
+  const modify = (a: string) => {
+    if (!a) dispatch({ type: MODIFYTASK });
+    else dispatch({ type: DELETETASK });
+  };
   const editTask = (task: TasksType, val: Boolean) =>
     dispatch({ type: EDITTASK, payload: { task, val } });
+  const deleteTask = (id: Id) => dispatch({ type: FILTERDELETE, payload: id });
 
   return (
     <AppContext.Provider
@@ -95,6 +101,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         changeStatus,
         modify,
         editTask,
+        deleteTask,
       }}
     >
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

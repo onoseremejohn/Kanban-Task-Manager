@@ -19,6 +19,8 @@ import {
   CHANGESTATUS,
   MODIFYTASK,
   EDITTASK,
+  DELETETASK,
+  FILTERDELETE,
 } from "./actions";
 // import { cloneDeep } from "lodash";
 import { statusName } from "./helpers";
@@ -50,6 +52,7 @@ const reducer: ReducerType<StateType, ActionType> = (
         showBoardMenu: false,
         viewTask: false,
         modifyTask: false,
+        deleteWarning: false,
         selectedTask: { task: null, statusIds: [], columnId: 0 },
       };
     }
@@ -153,6 +156,14 @@ const reducer: ReducerType<StateType, ActionType> = (
     case MODIFYTASK: {
       return { ...state, modifyTask: true, viewTask: false };
     }
+    case DELETETASK: {
+      return {
+        ...state,
+        modifyTask: false,
+        viewTask: false,
+        deleteWarning: true,
+      };
+    }
     case EDITTASK: {
       const { task, val } = action.payload as EditTaskPayload;
       const {
@@ -203,6 +214,32 @@ const reducer: ReducerType<StateType, ActionType> = (
           else return b;
         });
       }
+      return { ...state, boards: newBoards };
+    }
+    case FILTERDELETE: {
+      const id = action.payload as Id;
+      const {
+        boards,
+        currentBoardId,
+        selectedTask: { task, columnId },
+      } = state;
+      if (!task) return state;
+      let newBoards = [...boards];
+      newBoards = newBoards.map((b) => {
+        if (b.id === currentBoardId)
+          return {
+            ...b,
+            columns: b.columns.map((c) => {
+              if (c.id === columnId)
+                return {
+                  ...c,
+                  tasks: c.tasks.filter((t) => t.id !== id),
+                };
+              else return c;
+            }),
+          };
+        else return b;
+      });
       return { ...state, boards: newBoards };
     }
     default:

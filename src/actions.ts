@@ -7,3 +7,5 @@ export const TOGGLESUBTASK = "TOGGLESUBTASK";
 export const CHANGESTATUS = "CHANGESTATUS";
 export const MODIFYTASK = "MODIFYTASK";
 export const EDITTASK = "EDITTASK";
+export const DELETETASK = "DELETETASK";
+export const FILTERDELETE = "FILTERDELETE";
