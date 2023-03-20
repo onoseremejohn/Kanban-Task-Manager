@@ -71,7 +71,7 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
             <button
               type="button"
               onClick={(e) => {
-                modify("del");
+                modify('delete');
                 e.stopPropagation();
               }}
             >

@@ -25,8 +25,10 @@ import {
   CHANGESTATUS,
   MODIFYTASK,
   EDITTASK,
-  DELETETASK,
-  FILTERDELETE,
+  MODIFYDELETETASKORBOARD,
+  FILTERDELETETASK,
+  EDITDELETEMENUTOGGLE,
+  FILTERDELETEBOARD,
 } from "./actions";
 import { StateType, Id, TasksType } from "./types";
 const lightTheme = {
@@ -56,6 +58,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     showBoardMenu: false,
     viewTask: false,
     modifyTask: false,
+    editDeleteMenu: false,
     boardIds: [],
     currentBoardId: "",
     selectedTask: { task: null, statusIds: [], columnId: 0 },
@@ -81,13 +84,17 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const changeStatus = (id: Id) => {
     dispatch({ type: CHANGESTATUS, payload: id });
   };
-  const modify = (a: string) => {
+  const modify = (a?: "delete") => {
     if (!a) dispatch({ type: MODIFYTASK });
-    else dispatch({ type: DELETETASK });
+    else dispatch({ type: MODIFYDELETETASKORBOARD });
   };
   const editTask = (task: TasksType, val: Boolean) =>
     dispatch({ type: EDITTASK, payload: { task, val } });
-  const deleteTask = (id: Id) => dispatch({ type: FILTERDELETE, payload: id });
+  const deleteTask = (id: Id) =>
+    dispatch({ type: FILTERDELETETASK, payload: id });
+  const editDeleteToggle = () => dispatch({ type: EDITDELETEMENUTOGGLE });
+  const deleteBoard = (id?: Id) =>
+    dispatch({ type: FILTERDELETEBOARD, payload: id });
 
   return (
     <AppContext.Provider
@@ -102,6 +109,8 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         modify,
         editTask,
         deleteTask,
+        editDeleteToggle,
+        deleteBoard,
       }}
     >
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

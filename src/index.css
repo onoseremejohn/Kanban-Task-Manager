@@ -205,6 +205,8 @@ main {
   overflow: scroll;
   display: flex;
   gap: 2em;
+  min-height: calc(100vh - 5rem);
+  background-color: #f4f7fd;
 }
 
 ::-webkit-scrollbar {

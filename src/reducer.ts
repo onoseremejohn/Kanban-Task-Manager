@@ -19,8 +19,10 @@ import {
   CHANGESTATUS,
   MODIFYTASK,
   EDITTASK,
-  DELETETASK,
-  FILTERDELETE,
+  MODIFYDELETETASKORBOARD,
+  FILTERDELETETASK,
+  EDITDELETEMENUTOGGLE,
+  FILTERDELETEBOARD,
 } from "./actions";
 // import { cloneDeep } from "lodash";
 import { statusName } from "./helpers";
@@ -35,7 +37,7 @@ const reducer: ReducerType<StateType, ActionType> = (
       if (Array.isArray(action.payload)) {
         boards = action.payload;
       }
-      const boardIds = boards.map((x) => x.id);
+      const boardIds = boards.map((b) => b.id);
       return {
         ...state,
         boards,
@@ -44,7 +46,7 @@ const reducer: ReducerType<StateType, ActionType> = (
       };
     }
     case OPENBOARDMENU: {
-      return { ...state, showBoardMenu: true };
+      return { ...state, showBoardMenu: true, editDeleteMenu: false };
     }
     case CLOSEMODAL: {
       return {
@@ -74,6 +76,7 @@ const reducer: ReducerType<StateType, ActionType> = (
       return {
         ...state,
         viewTask: true,
+        editDeleteMenu: false,
         selectedTask: { task, statusIds, columnId },
       };
     }
@@ -154,9 +157,14 @@ const reducer: ReducerType<StateType, ActionType> = (
       };
     }
     case MODIFYTASK: {
-      return { ...state, modifyTask: true, viewTask: false };
+      return {
+        ...state,
+        modifyTask: true,
+        viewTask: false,
+        editDeleteMenu: false,
+      };
     }
-    case DELETETASK: {
+    case MODIFYDELETETASKORBOARD: {
       return {
         ...state,
         modifyTask: false,
@@ -216,7 +224,7 @@ const reducer: ReducerType<StateType, ActionType> = (
       }
       return { ...state, boards: newBoards };
     }
-    case FILTERDELETE: {
+    case FILTERDELETETASK: {
       const id = action.payload as Id;
       const {
         boards,
@@ -241,6 +249,23 @@ const reducer: ReducerType<StateType, ActionType> = (
         else return b;
       });
       return { ...state, boards: newBoards };
+    }
+    case EDITDELETEMENUTOGGLE: {
+      const { editDeleteMenu } = state;
+      return { ...state, editDeleteMenu: !editDeleteMenu };
+    }
+    case FILTERDELETEBOARD: {
+      const id = action.payload as Id;
+      const { boards } = state;
+      let newBoards = [...boards];
+      newBoards = newBoards.filter((b) => b.id !== id);
+      const boardIds = newBoards.map((b) => b.id);
+      return {
+        ...state,
+        boards: newBoards,
+        currentBoardId: newBoards[0]?.id,
+        boardIds,
+      };
     }
     default:
       throw new Error(`No Matching "${action.type}" - action type`);

@@ -10,6 +10,7 @@ const SingleTask = ({
   const { openTask = () => {} } = useGlobalContext() || {};
   return (
     <article
+      style={{ backgroundColor: "white" }}
       role="button"
       aria-label="view task"
       onClick={(e) => {

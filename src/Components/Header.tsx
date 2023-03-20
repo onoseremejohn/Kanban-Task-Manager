@@ -1,27 +1,41 @@
 import styled from "styled-components";
 import logo from "../assets/logo-mobile.svg";
 import { FiPlus } from "react-icons/fi";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { ThreeDots } from "../assets/Icons";
 import { useGlobalContext } from "../AppContext";
 import { findBoard } from "../helpers";
-import { useState } from "react";
 
 const Header = () => {
   const {
     currentBoardId,
     boards,
+    editDeleteMenu,
+    editDeleteToggle = () => {},
     openBoardMenu = () => {},
     modify = () => {},
   } = useGlobalContext() || {};
   const currentBoard = findBoard(boards, currentBoardId);
-  const [show, setShow] = useState(false);
-  const toggleShow = setShow((s) => !s);
   return (
     <Wrapper>
-      {show && (
+      {editDeleteMenu && (
         <div className="show">
-          <button type="button">Edit Board</button>
-          <button type="button">Delete Board</button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            Edit Board
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              modify("delete");
+              e.stopPropagation();
+            }}
+          >
+            Delete Board
+          </button>
         </div>
       )}
       <div className="center">
@@ -35,7 +49,7 @@ const Header = () => {
               e.stopPropagation();
             }}
           >
-            {currentBoard}
+            {currentBoard || 'No board Found'}
           </button>
         </div>
         <div>
@@ -52,9 +66,12 @@ const Header = () => {
           <button
             type="button"
             style={{ padding: "0.4em" }}
-            onClick={toggleShow}
+            onClick={(e) => {
+              editDeleteToggle();
+              e.stopPropagation();
+            }}
           >
-            <BsThreeDotsVertical />
+            <ThreeDots />
           </button>
         </div>
       </div>

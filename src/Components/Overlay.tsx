@@ -2,7 +2,7 @@ import styled from "styled-components";
 import BoardMenu from "../Components/BoardMenu";
 import ViewTask from "./ViewTask";
 import AddNewTask from "./ModifyTask";
-import Delete from "./Delete";
+import DeleteWarning from "./DeleteWarning";
 import { useGlobalContext } from "../AppContext";
 import { useEffect, useRef } from "react";
 const Overlay = () => {
@@ -12,14 +12,16 @@ const Overlay = () => {
     showBoardMenu,
     modifyTask,
     deleteWarning,
+    editDeleteMenu,
+    editDeleteToggle = () => {},
     closeModal = () => {},
   } = useGlobalContext() || {};
   const show = showBoardMenu || viewTask || modifyTask || deleteWarning;
   useEffect(() => {
     const handleClick = (event: Event) => {
-      if (show && !articleRef.current?.contains(event.target as Node)) {
+      if (editDeleteMenu) editDeleteToggle();
+      if (show && !articleRef.current?.contains(event.target as Node))
         closeModal();
-      }
     };
     window.addEventListener("click", handleClick);
     return () => {
@@ -31,7 +33,7 @@ const Overlay = () => {
       {showBoardMenu && <BoardMenu ref={articleRef} />}
       {viewTask && <ViewTask ref={articleRef} />}
       {modifyTask && <AddNewTask ref={articleRef} />}
-      {deleteWarning && <Delete ref={articleRef} />}
+      {deleteWarning && <DeleteWarning ref={articleRef} />}
     </Wrapper>
   );
 };

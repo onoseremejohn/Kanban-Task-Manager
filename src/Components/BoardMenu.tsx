@@ -15,17 +15,19 @@ const BoardMenu = forwardRef<HTMLDivElement>((props, ref) => {
       {boardIds?.map((id) => {
         const name = findBoard(boards, id);
         return (
-          <h5
+          <button
             key={id}
             onClick={() => {
               closeModal();
               selectBoard(id);
             }}
+            className="font-bold"
           >
             {name}
-          </h5>
+          </button>
         );
       })}
+      <button>Create new board</button>
     </Wrapper>
   );
 });
@@ -42,7 +44,8 @@ const Wrapper = styled.div`
   opacity: 1;
   padding: 1em;
   width: 65vw;
-  h5 {
+  button {
+    font-size: 1rem;
     margin: 0;
     padding: 0.5em 0;
   }
