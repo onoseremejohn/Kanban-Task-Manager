@@ -63,6 +63,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     currentBoardId: "",
     selectedTask: { task: null, statusIds: [], columnId: 0 },
     deleteWarning: false,
+    addNewBoardModal: true,
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const isLight = state.theme === "light";

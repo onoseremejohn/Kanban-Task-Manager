@@ -55,6 +55,7 @@ const reducer: ReducerType<StateType, ActionType> = (
         viewTask: false,
         modifyTask: false,
         deleteWarning: false,
+        addNewBoardModal: false,
         selectedTask: { task: null, statusIds: [], columnId: 0 },
       };
     }

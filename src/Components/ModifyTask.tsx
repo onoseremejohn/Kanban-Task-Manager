@@ -153,32 +153,30 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
         <div className="form-control">
           <label htmlFor="subtasks">Subtasks</label>
 
-          {subtasks.map((s) => {
-            return (
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "1%" }}
-                key={s.id}
+          {subtasks.map((s) => (
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "1%" }}
+              key={s.id}
+            >
+              <input
+                type="text"
+                id="subtasks"
+                style={{ flexGrow: 1 }}
+                value={s.title}
+                onChange={(e) => handleSubtasksChange(s.id, e)}
+              />
+              <button
+                type="button"
+                style={{ padding: "7px" }}
+                onClick={(e) => {
+                  handleDelete(s.id);
+                  e.stopPropagation();
+                }}
               >
-                <input
-                  type="text"
-                  id="subtasks"
-                  style={{ flexGrow: 1 }}
-                  value={s.title}
-                  onChange={(e) => handleSubtasksChange(s.id, e)}
-                />
-                <button
-                  type="button"
-                  style={{ padding: "7px" }}
-                  onClick={(e) => {
-                    handleDelete(s.id);
-                    e.stopPropagation();
-                  }}
-                >
-                  <Close />
-                </button>
-              </div>
-            );
-          })}
+                <Close />
+              </button>
+            </div>
+          ))}
         </div>
         {subtasks.length < 6 && (
           <button
@@ -260,6 +258,7 @@ const Wrapper = styled.div`
     padding: 0.5em 1em;
   }
   input {
+    height: 2em;
     padding: 0.5em 1em;
   }
   button {
