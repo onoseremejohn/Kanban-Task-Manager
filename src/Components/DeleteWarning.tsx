@@ -37,7 +37,7 @@ const DeleteWarning = forwardRef<HTMLDivElement>((props, ref) => {
       <div className="btns">
         <button
           type="button"
-          className="delete btn"
+          className="delete"
           onClick={() => {
             if (task) deleteTask(task.id);
             else deleteBoard(currentBoardId);
@@ -46,7 +46,7 @@ const DeleteWarning = forwardRef<HTMLDivElement>((props, ref) => {
         >
           Delete
         </button>
-        <button type="button" className="cancel btn" onClick={closeModal}>
+        <button type="button" className="cancel" onClick={closeModal}>
           Cancel
         </button>
       </div>
@@ -64,6 +64,9 @@ const Wrapper = styled.div`
   width: 85vw;
   padding: 2.85em 1.5em;
   border-radius: var(--radius);
+  h4 {
+    color: #ea5555;
+  }
   .close {
     position: absolute;
     right: 3%;
@@ -74,11 +77,26 @@ const Wrapper = styled.div`
     display: grid;
     place-content: center;
   }
+  p {
+    color: var(--grey);
+  }
   .btns {
     margin-top: 1em;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2.5em;
+    button {
+      border-radius: 20px;
+      padding: 0.5em 0;
+    }
+  }
+  .delete {
+    background-color: #ea5555;
+    color: white;
+  }
+  .cancel {
+    background-color: #f0effa;
+    color: var(--purple);
   }
 `;
 

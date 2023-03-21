@@ -3,7 +3,8 @@ import { forwardRef, useState, ChangeEvent, FormEvent } from "react";
 import { Close } from "../assets/Icons";
 import { useGlobalContext } from "../AppContext";
 import { nanoid } from "nanoid";
-import { BoardType, Id } from "../types";
+import { BoardType, Id, ColumnType } from "../types";
+import { findBoard } from "../helpers";
 // This is AddNewBoardModal and also Edit board Modal
 const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
   const {
@@ -11,20 +12,28 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
     addNewBoard = () => {},
     editBoardFlag,
     editBoard = () => {},
+    boards,
+    currentBoardId = 0,
   } = useGlobalContext() || {};
-  const [columns, setColumns] = useState([
-    { id: nanoid(), name: "", tasks: [] },
-  ]);
+  const currentBoardName = findBoard(boards, currentBoardId) ?? "";
+  const currentColumns = boards?.find((b) => b.id === currentBoardId)?.columns;
+  const [columns, setColumns] = editBoardFlag
+    ? useState<ColumnType[]>(currentColumns ? [...currentColumns] : [])
+    : useState<ColumnType[]>([{ id: nanoid(), name: "", tasks: [] }]);
   const handleColumnsChange = (e: ChangeEvent<HTMLInputElement>, id: Id) => {
     const value = e.target.value;
     if (/^\s+$/.test(value)) return;
-    const updated = columns.map((c) => {
-      if (c.id === id) return { ...c, name: value };
-      return c;
+    setColumns((prevColumns) => {
+      const updated = prevColumns.map((c) => {
+        if (c.id === id) return { ...c, name: value };
+        return c;
+      });
+      return updated;
     });
-    setColumns(updated);
   };
-  const [name, setName] = useState("");
+  const [name, setName] = editBoardFlag
+    ? useState(currentBoardName)
+    : useState("");
   const addNewColumn = () => {
     if (columns.length >= 6) return;
     setColumns([...columns, { id: nanoid(), name: "", tasks: [] }]);
@@ -36,8 +45,13 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let payload: BoardType;
-    payload = { id: nanoid(), name, columns: [...columns] };
-    addNewBoard(payload);
+    if (editBoardFlag) {
+      payload = { id: currentBoardId, name, columns: [...columns] };
+      editBoard(payload);
+    } else {
+      payload = { id: nanoid(), name, columns: [...columns] };
+      addNewBoard(payload);
+    }
     closeModal();
   };
   return (
@@ -52,7 +66,7 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
       >
         <Close />
       </button>
-      <h4>Add New Board</h4>
+      <h4>{editBoardFlag ? "Edit board" : "Add New Board"}</h4>
       <form onSubmit={handleSubmit}>
         <div className="form-control">
           <label htmlFor="name">Name</label>
@@ -85,6 +99,7 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
                     deleteColumn(c.id);
                     e.stopPropagation();
                   }}
+                  disabled={c.tasks.length > 0}
                 >
                   <Close />
                 </button>
@@ -95,17 +110,17 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
         {columns.length < 6 && (
           <button
             type="button"
-            className="btn"
+            className="column"
             onClick={(e) => {
               addNewColumn();
               e.stopPropagation();
             }}
           >
-            Add New Column
+            + Add New Column
           </button>
         )}
-        <button type="submit" className="btn">
-          Create New Board
+        <button type="submit" className="submit">
+          {editBoardFlag ? "Save Changes" : "Create New Board"}
         </button>
       </form>
     </Wrapper>
@@ -145,6 +160,12 @@ const Wrapper = styled.div`
   input {
     height: 2em;
     padding: 0.5em 1em;
+    border-radius: var(--radius);
+    outline: none;
+    border: 2px solid #828fa366;
+    &:focus-visible {
+      border-color: var(--purple);
+    }
   }
   .flex {
     display: flex;
@@ -159,6 +180,24 @@ const Wrapper = styled.div`
       display: block;
       width: 100%;
     }
+  }
+  button:disabled {
+    opacity: 30%;
+    cursor: not-allowed;
+  }
+  .column {
+    background-color: #f0effa;
+    padding: 0.5em 1em;
+    border-radius: 20px;
+    color: var(--purple);
+    font-weight: 600;
+  }
+  .submit {
+    background: #635fc7;
+    padding: 0.5em 1em;
+    color: white;
+    font-weight: 600;
+    border-radius: 20px;
   }
 `;
 

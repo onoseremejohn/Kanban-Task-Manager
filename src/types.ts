@@ -50,7 +50,7 @@ export interface StateType {
   deleteBoard?(a?: Id): void;
   openAddNewOrEditBoard?(a: "add" | "edit"): void;
   addNewBoard?(a: BoardType): void;
-  editBoard?(): void;
+  editBoard?(a:BoardType): void;
 }
 
 export type ReducerType<S, A> = (state: S, action: A) => StateType;

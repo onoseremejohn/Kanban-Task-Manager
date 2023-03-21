@@ -187,7 +187,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
               e.stopPropagation();
             }}
           >
-            Add New Subtask
+            + Add New Subtask
           </button>
         )}
         <div className="form-control" style={{ position: "relative" }}>
@@ -253,13 +253,29 @@ const Wrapper = styled.div`
     flex-direction: column;
     gap: 0.5em;
   }
+  label {
+    color: var(--grey);
+    font-weight: 500;
+  }
   textarea {
+    border-radius: var(--radius);
     resize: none;
     padding: 0.5em 1em;
+    outline: none;
+    border: 2px solid #828fa366;
+    &:focus-visible {
+      border-color: var(--purple);
+    }
   }
   input {
     height: 2em;
     padding: 0.5em 1em;
+    border-radius: var(--radius);
+    outline: none;
+    border: 2px solid #828fa366;
+    &:focus-visible {
+      border-color: var(--purple);
+    }
   }
   button {
     display: block;
@@ -267,6 +283,9 @@ const Wrapper = styled.div`
   .subtask {
     background-color: #f0effa;
     padding: 0.5em 1em;
+    border-radius: 20px;
+    color: var(--purple);
+    font-weight: 600;
   }
   .status {
     border: 2px solid rgba(130, 143, 163, 0.4);
@@ -296,6 +315,9 @@ const Wrapper = styled.div`
   .submit {
     background: #635fc7;
     padding: 0.5em 1em;
+    color: white;
+    font-weight: 600;
+    border-radius: 20px;
   }
 `;
 

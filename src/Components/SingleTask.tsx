@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import { TasksType } from "../types";
 import { useGlobalContext } from "../AppContext";
 import { countCompletedSubtasks } from "../helpers";
@@ -9,7 +10,7 @@ const SingleTask = ({
 }: TasksType) => {
   const { openTask = () => {} } = useGlobalContext() || {};
   return (
-    <article
+    <Wrapper
       style={{ backgroundColor: "white" }}
       role="button"
       aria-label="view task"
@@ -19,11 +20,28 @@ const SingleTask = ({
       }}
     >
       <h4>{title}</h4>
-      <p>
+      <p className="font-bold">
         {countCompletedSubtasks(subtasks)} of {subtasks.length} Subtasks
       </p>
-    </article>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.article`
+  box-shadow: var(--bs);
+  padding: 1.5rem 1rem;
+  width: 17rem;
+  min-height: 2.5rem;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  cursor: grab;
+  h4 {
+    font-size: 1rem;
+    font-weight: var(--fw-bold);
+  }
+  p {
+    color: var(--grey);
+  }
+`;
 
 export default SingleTask;

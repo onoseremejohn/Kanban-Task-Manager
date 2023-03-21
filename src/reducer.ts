@@ -274,24 +274,25 @@ const reducer: ReducerType<StateType, ActionType> = (
         boardIds,
       };
     }
-    case ADDNEWBOARD: {
-      const board = action.payload as BoardType;
-      const { boards } = state;
-      let newBoards = [...boards, board];
-      const boardIds = newBoards.map((b) => b.id);
-      return {
-        ...state,
-        boards: newBoards,
-        currentBoardId: board.id,
-        boardIds,
-      };
-    }
     case OPENADDNEWBOARDMODAL: {
       return {
         ...state,
         editOrAddNewBoardModal: true,
         editDeleteMenu: false,
         showBoardMenu: false,
+        editBoardFlag: false,
+      };
+    }
+    case ADDNEWBOARD: {
+      const board = action.payload as BoardType;
+      const { boards } = state;
+      const newBoards = [...boards, board];
+      const boardIds = newBoards.map((b) => b.id);
+      return {
+        ...state,
+        boards: newBoards,
+        currentBoardId: board.id,
+        boardIds,
       };
     }
     case OPENEDITBOARDMODAL: {
@@ -304,12 +305,19 @@ const reducer: ReducerType<StateType, ActionType> = (
       };
     }
     case EDITBOARD: {
+      const board = action.payload as BoardType;
+      const { boards } = state;
+      let newBoards = [...boards];
+      newBoards = newBoards.map((b) => {
+        if (b.id === board.id) return board;
+        else return b;
+      });
+      const boardIds = newBoards.map((b) => b.id);
       return {
         ...state,
-        // editOrAddNewBoardModal: true,
-        // editDeleteMenu: false,
-        // showBoardMenu: false,
-        // editBoardFlag: true,
+        boards: newBoards,
+        currentBoardId: board.id,
+        boardIds,
       };
     }
     default:

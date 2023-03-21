@@ -107,8 +107,8 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   };
   const addNewBoard = (board: BoardType) =>
     dispatch({ type: ADDNEWBOARD, payload: board });
-  const editBoard = () =>
-    dispatch({ type: EDITBOARD});
+  const editBoard = (board: BoardType) =>
+    dispatch({ type: EDITBOARD, payload: board });
 
   return (
     <AppContext.Provider

@@ -1,7 +1,10 @@
 import styled from "styled-components";
-import logo from "../assets/logo-mobile.svg";
-import { FiPlus } from "react-icons/fi";
-import { ThreeDots } from "../assets/Icons";
+import {
+  ThreeDots,
+  AddTaskMobile,
+  ChevronDown,
+  LogoMobile,
+} from "../assets/Icons";
 import { useGlobalContext } from "../AppContext";
 import { findBoard } from "../helpers";
 
@@ -9,6 +12,7 @@ const Header = () => {
   const {
     currentBoardId,
     boards,
+    showBoardMenu,
     editDeleteMenu,
     editDeleteToggle = () => {},
     openBoardMenu = () => {},
@@ -26,6 +30,7 @@ const Header = () => {
               e.stopPropagation();
               openAddNewOrEditBoard("edit");
             }}
+            className="edit"
           >
             Edit Board
           </button>
@@ -35,6 +40,7 @@ const Header = () => {
               e.stopPropagation();
               modify("delete");
             }}
+            className="delete"
           >
             Delete Board
           </button>
@@ -42,7 +48,7 @@ const Header = () => {
       )}
       <div className="center">
         <div className="gap">
-          <img src={logo} alt="LOGO" />
+          <LogoMobile />
           <button
             type="button"
             className="board font-bold"
@@ -52,6 +58,10 @@ const Header = () => {
             }}
           >
             {currentBoard || "No board Found"}
+            {"  "}
+            <span className={showBoardMenu ? "dropdown rotate" : "dropdown"}>
+              <ChevronDown />
+            </span>
           </button>
         </div>
         <div>
@@ -63,7 +73,7 @@ const Header = () => {
               e.stopPropagation();
             }}
           >
-            <FiPlus style={{ color: "white" }} />
+            <AddTaskMobile />
           </button>
           <button
             type="button"
@@ -110,9 +120,9 @@ const Wrapper = styled.header`
     display: grid;
     place-items: center;
     background-color: #635fc7;
-    padding: 0.4em;
+    padding: 0.6em;
     aspect-ratio: 2.5/1;
-    border-radius: 10px;
+    border-radius: 20px;
   }
   .board {
     font-size: clamp(1.2rem, 3vw, 1.5rem);
@@ -128,10 +138,28 @@ const Wrapper = styled.header`
     box-shadow: var(--bs);
     background-color: white;
     button {
+      font-size: 1.1rem;
       width: 100%;
       display: block;
-      padding: 0.5em 2em;
+      text-align: left;
+      padding: 0.5em 1em;
     }
+    button.edit {
+      color: #828fa3;
+    }
+    button.delete {
+      color: #ea5555;
+    }
+  }
+  .dropdown {
+    margin-left: 0.2em;
+  }
+  .dropdown svg {
+    transform-origin: right center;
+    transition: var(--transition);
+  }
+  .dropdown.rotate svg {
+    rotate: 180deg;
   }
 `;
 
