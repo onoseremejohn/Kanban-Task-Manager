@@ -5,21 +5,23 @@ import { useGlobalContext } from "../AppContext";
 import { nanoid } from "nanoid";
 import { BoardType, Id, ColumnType } from "../types";
 import { findBoard } from "../helpers";
-// This is AddNewBoardModal and also Edit board Modal
+// This is AddNewBoardModal and also Edit board Modal and also Add new column modal
 const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
   const {
     closeModal = () => {},
     addNewBoard = () => {},
     editBoardFlag,
+    addNewColumnFlag,
     editBoard = () => {},
     boards,
     currentBoardId = 0,
   } = useGlobalContext() || {};
   const currentBoardName = findBoard(boards, currentBoardId) ?? "";
   const currentColumns = boards?.find((b) => b.id === currentBoardId)?.columns;
-  const [columns, setColumns] = editBoardFlag
-    ? useState<ColumnType[]>(currentColumns ? [...currentColumns] : [])
-    : useState<ColumnType[]>([{ id: nanoid(), name: "", tasks: [] }]);
+  const [columns, setColumns] =
+    editBoardFlag || addNewColumnFlag
+      ? useState<ColumnType[]>(currentColumns ? [...currentColumns] : [])
+      : useState<ColumnType[]>([{ id: nanoid(), name: "", tasks: [] }]);
   const handleColumnsChange = (e: ChangeEvent<HTMLInputElement>, id: Id) => {
     const value = e.target.value;
     if (/^\s+$/.test(value)) return;
@@ -31,9 +33,10 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
       return updated;
     });
   };
-  const [name, setName] = editBoardFlag
-    ? useState(currentBoardName)
-    : useState("");
+  const [name, setName] =
+    editBoardFlag || addNewColumnFlag
+      ? useState(currentBoardName)
+      : useState("");
   const addNewColumn = () => {
     if (columns.length >= 6) return;
     setColumns([...columns, { id: nanoid(), name: "", tasks: [] }]);
@@ -45,7 +48,7 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let payload: BoardType;
-    if (editBoardFlag) {
+    if (editBoardFlag || addNewColumnFlag) {
       payload = { id: currentBoardId, name, columns: [...columns] };
       editBoard(payload);
     } else {
@@ -66,7 +69,13 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
       >
         <Close />
       </button>
-      <h4>{editBoardFlag ? "Edit board" : "Add New Board"}</h4>
+      <h4>
+        {editBoardFlag
+          ? "Edit board"
+          : addNewColumnFlag
+          ? "Add New Column"
+          : "Add New Board"}
+      </h4>
       <form onSubmit={handleSubmit}>
         <div className="form-control">
           <label htmlFor="name">Name</label>
@@ -75,6 +84,7 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
             id="name"
             value={name}
             name="title"
+            disabled={addNewColumnFlag}
             onChange={(e) => {
               if (/^\s+$/.test(e.target.value)) return;
               setName(e.target.value);
@@ -120,7 +130,9 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
           </button>
         )}
         <button type="submit" className="submit">
-          {editBoardFlag ? "Save Changes" : "Create New Board"}
+          {editBoardFlag || addNewColumnFlag
+            ? "Save Changes"
+            : "Create New Board"}
         </button>
       </form>
     </Wrapper>
@@ -198,6 +210,9 @@ const Wrapper = styled.div`
     color: white;
     font-weight: 600;
     border-radius: 20px;
+  }
+  input:disabled {
+    opacity: 50%;
   }
 `;
 

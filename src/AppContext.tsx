@@ -33,6 +33,7 @@ import {
   ADDNEWBOARD,
   OPENEDITBOARDMODAL,
   EDITBOARD,
+  ADDNEWCOLUMNMODAL,
 } from "./actions";
 import { StateType, Id, TasksType, BoardType } from "./types";
 const lightTheme = {
@@ -69,6 +70,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     deleteWarning: false,
     editOrAddNewBoardModal: false,
     editBoardFlag: false,
+    addNewColumnFlag: false,
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const isLight = state.theme === "light";
@@ -101,9 +103,10 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const editDeleteToggle = () => dispatch({ type: EDITDELETEMENUTOGGLE });
   const deleteBoard = (id?: Id) =>
     dispatch({ type: FILTERDELETEBOARD, payload: id });
-  const openAddNewOrEditBoard = (a: "add" | "edit") => {
+  const openAddNewOrEditBoard = (a: "add" | "edit" | "column") => {
     if (a === "add") dispatch({ type: OPENADDNEWBOARDMODAL });
     if (a === "edit") dispatch({ type: OPENEDITBOARDMODAL });
+    if (a === "column") dispatch({ type: ADDNEWCOLUMNMODAL });
   };
   const addNewBoard = (board: BoardType) =>
     dispatch({ type: ADDNEWBOARD, payload: board });

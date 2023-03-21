@@ -27,6 +27,7 @@ import {
   OPENADDNEWBOARDMODAL,
   OPENEDITBOARDMODAL,
   EDITBOARD,
+  ADDNEWCOLUMNMODAL,
 } from "./actions";
 // import { cloneDeep } from "lodash";
 import { statusName } from "./helpers";
@@ -61,6 +62,7 @@ const reducer: ReducerType<StateType, ActionType> = (
         deleteWarning: false,
         editOrAddNewBoardModal: false,
         editBoardFlag: false,
+        addNewColumnFlag: false,
         selectedTask: { task: null, statusIds: [], columnId: 0 },
       };
     }
@@ -277,10 +279,11 @@ const reducer: ReducerType<StateType, ActionType> = (
     case OPENADDNEWBOARDMODAL: {
       return {
         ...state,
-        editOrAddNewBoardModal: true,
         editDeleteMenu: false,
         showBoardMenu: false,
         editBoardFlag: false,
+        addNewColumnFlag: false,
+        editOrAddNewBoardModal: true,
       };
     }
     case ADDNEWBOARD: {
@@ -301,6 +304,7 @@ const reducer: ReducerType<StateType, ActionType> = (
         editOrAddNewBoardModal: true,
         editDeleteMenu: false,
         showBoardMenu: false,
+        addNewColumnFlag: false,
         editBoardFlag: true,
       };
     }
@@ -318,6 +322,16 @@ const reducer: ReducerType<StateType, ActionType> = (
         boards: newBoards,
         currentBoardId: board.id,
         boardIds,
+      };
+    }
+    case ADDNEWCOLUMNMODAL: {
+      return {
+        ...state,
+        editBoardFlag: false,
+        editDeleteMenu: false,
+        showBoardMenu: false,
+        addNewColumnFlag: true,
+        editOrAddNewBoardModal: true,
       };
     }
     default:

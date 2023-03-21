@@ -5,7 +5,11 @@ import SingleColumn from "./Components/SingleColumn";
 import styled from "styled-components";
 
 export default () => {
-  const { boards, currentBoardId } = useGlobalContext() || {};
+  const {
+    boards,
+    currentBoardId,
+    openAddNewOrEditBoard = () => {},
+  } = useGlobalContext() || {};
   const data = boards?.find((board) => board.id === currentBoardId);
 
   return (
@@ -22,9 +26,17 @@ export default () => {
           </Wrapper>
         )}
         {Array.isArray(boards) && boards.length > 0 && (
-          <NewColumn role='button' aria-label="Add new column">
+          <NewColumn>
             <div>&nbsp;</div>
-            <div className="gradient">
+            <div
+              className="gradient"
+              role="button"
+              aria-label="Add new column"
+              onClick={(e) => {
+                e.stopPropagation();
+                openAddNewOrEditBoard("column");
+              }}
+            >
               <p className="absolute-center font-bold">+ New Column</p>
             </div>
           </NewColumn>

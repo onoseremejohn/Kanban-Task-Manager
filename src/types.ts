@@ -36,6 +36,7 @@ export interface StateType {
   deleteWarning: boolean;
   editOrAddNewBoardModal: boolean;
   editBoardFlag: boolean;
+  addNewColumnFlag: boolean;
   selectedTask: { task?: TasksType | null; statusIds?: Id[]; columnId: Id };
   openBoardMenu?(): void;
   closeModal?(): void;
@@ -48,9 +49,9 @@ export interface StateType {
   deleteTask?(a: Id): void;
   editDeleteToggle?(): void;
   deleteBoard?(a?: Id): void;
-  openAddNewOrEditBoard?(a: "add" | "edit"): void;
+  openAddNewOrEditBoard?(a: "add" | "edit" | "column"): void;
   addNewBoard?(a: BoardType): void;
-  editBoard?(a:BoardType): void;
+  editBoard?(a: BoardType): void;
 }
 
 export type ReducerType<S, A> = (state: S, action: A) => StateType;
