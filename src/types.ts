@@ -16,7 +16,12 @@ export interface EditTaskPayload {
 
 export interface ActionType {
   type: string;
-  payload?: ViewTaskPayload | Id | ToggleSubtaskPayload | EditTaskPayload;
+  payload?:
+    | ViewTaskPayload
+    | Id
+    | ToggleSubtaskPayload
+    | EditTaskPayload
+    | BoardType;
 }
 
 export interface StateType {
@@ -25,11 +30,12 @@ export interface StateType {
   boardIds: Id[];
   currentBoardId: Id;
   showBoardMenu: boolean;
-  viewTask: boolean;
+  viewTaskModal: boolean;
   modifyTask: boolean;
   editDeleteMenu: boolean;
   deleteWarning: boolean;
-  addNewBoardModal: boolean;
+  editOrAddNewBoardModal: boolean;
+  editBoardFlag: boolean;
   selectedTask: { task?: TasksType | null; statusIds?: Id[]; columnId: Id };
   openBoardMenu?(): void;
   closeModal?(): void;
@@ -42,6 +48,9 @@ export interface StateType {
   deleteTask?(a: Id): void;
   editDeleteToggle?(): void;
   deleteBoard?(a?: Id): void;
+  openAddNewOrEditBoard?(a: "add" | "edit"): void;
+  addNewBoard?(a: BoardType): void;
+  editBoard?(): void;
 }
 
 export type ReducerType<S, A> = (state: S, action: A) => StateType;

@@ -1,12 +1,20 @@
 import styled from "styled-components";
-import { forwardRef, useState, ChangeEvent } from "react";
+import { forwardRef, useState, ChangeEvent, FormEvent } from "react";
 import { Close } from "../assets/Icons";
 import { useGlobalContext } from "../AppContext";
 import { nanoid } from "nanoid";
-import { Id } from "../types";
-const AddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
-  const { closeModal = () => {} } = useGlobalContext() || {};
-  const [columns, setColumns] = useState([{ id: nanoid(), name: "" }]);
+import { BoardType, Id } from "../types";
+// This is AddNewBoardModal and also Edit board Modal
+const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
+  const {
+    closeModal = () => {},
+    addNewBoard = () => {},
+    editBoardFlag,
+    editBoard = () => {},
+  } = useGlobalContext() || {};
+  const [columns, setColumns] = useState([
+    { id: nanoid(), name: "", tasks: [] },
+  ]);
   const handleColumnsChange = (e: ChangeEvent<HTMLInputElement>, id: Id) => {
     const value = e.target.value;
     if (/^\s+$/.test(value)) return;
@@ -19,7 +27,18 @@ const AddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
   const [name, setName] = useState("");
   const addNewColumn = () => {
     if (columns.length >= 6) return;
-    setColumns([...columns, { id: nanoid(), name: "" }]);
+    setColumns([...columns, { id: nanoid(), name: "", tasks: [] }]);
+  };
+  const deleteColumn = (id: Id) => {
+    const updated = columns.filter((c) => c.id !== id);
+    setColumns(updated);
+  };
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let payload: BoardType;
+    payload = { id: nanoid(), name, columns: [...columns] };
+    addNewBoard(payload);
+    closeModal();
   };
   return (
     <Wrapper ref={ref}>
@@ -34,7 +53,7 @@ const AddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
         <Close />
       </button>
       <h4>Add New Board</h4>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="form-control">
           <label htmlFor="name">Name</label>
           <input
@@ -51,14 +70,26 @@ const AddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
         <div className="form-control">
           <label htmlFor="columns">Columns</label>
           {columns.map((c) => (
-            <input
-              type="text"
-              id="columns"
-              value={c.name}
-              name="columns"
-              key={c.id}
-              onChange={(e) => handleColumnsChange(e, c.id)}
-            />
+            <div className={columns.length > 1 ? "flex" : "block"} key={c.id}>
+              <input
+                type="text"
+                id="columns"
+                value={c.name}
+                onChange={(e) => handleColumnsChange(e, c.id)}
+              />
+              {columns.length > 1 && (
+                <button
+                  type="button"
+                  style={{ padding: "7px" }}
+                  onClick={(e) => {
+                    deleteColumn(c.id);
+                    e.stopPropagation();
+                  }}
+                >
+                  <Close />
+                </button>
+              )}
+            </div>
           ))}
         </div>
         {columns.length < 6 && (
@@ -115,6 +146,20 @@ const Wrapper = styled.div`
     height: 2em;
     padding: 0.5em 1em;
   }
+  .flex {
+    display: flex;
+    align-items: center;
+    gap: 1%;
+    input {
+      flex-grow: 1;
+    }
+  }
+  .block {
+    input {
+      display: block;
+      width: 100%;
+    }
+  }
 `;
 
-export default AddNewBoard;
+export default EditOrAddNewBoard;

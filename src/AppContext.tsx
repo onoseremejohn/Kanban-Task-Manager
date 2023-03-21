@@ -20,17 +20,21 @@ import {
   OPENBOARDMENU,
   CLOSEMODAL,
   SELECTBOARD,
-  VIEWTASK,
+  VIEWTASKMODAL,
   TOGGLESUBTASK,
   CHANGESTATUS,
-  MODIFYTASK,
+  MODIFYTASKMODAL,
   EDITTASK,
-  MODIFYDELETETASKORBOARD,
+  DELETETASKORBOARDMODAL,
   FILTERDELETETASK,
   EDITDELETEMENUTOGGLE,
   FILTERDELETEBOARD,
+  OPENADDNEWBOARDMODAL,
+  ADDNEWBOARD,
+  OPENEDITBOARDMODAL,
+  EDITBOARD,
 } from "./actions";
-import { StateType, Id, TasksType } from "./types";
+import { StateType, Id, TasksType, BoardType } from "./types";
 const lightTheme = {
   body: "#FFF",
   text: "#363537",
@@ -56,14 +60,15 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     theme: "light",
     boards: [],
     showBoardMenu: false,
-    viewTask: false,
+    viewTaskModal: false,
     modifyTask: false,
     editDeleteMenu: false,
     boardIds: [],
     currentBoardId: "",
     selectedTask: { task: null, statusIds: [], columnId: 0 },
     deleteWarning: false,
-    addNewBoardModal: true,
+    editOrAddNewBoardModal: false,
+    editBoardFlag: false,
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const isLight = state.theme === "light";
@@ -78,7 +83,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const closeModal = () => dispatch({ type: CLOSEMODAL });
   const selectBoard = (id: Id) => dispatch({ type: SELECTBOARD, payload: id });
   const openTask = (columnId: Id, taskId: Id) =>
-    dispatch({ type: VIEWTASK, payload: { columnId, taskId } });
+    dispatch({ type: VIEWTASKMODAL, payload: { columnId, taskId } });
   const toggleSubtask = (e: ChangeEvent<HTMLInputElement>, id: Id) => {
     dispatch({ type: TOGGLESUBTASK, payload: { e, id } });
   };
@@ -86,8 +91,8 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: CHANGESTATUS, payload: id });
   };
   const modify = (a?: "delete") => {
-    if (!a) dispatch({ type: MODIFYTASK });
-    else dispatch({ type: MODIFYDELETETASKORBOARD });
+    if (!a) dispatch({ type: MODIFYTASKMODAL });
+    else dispatch({ type: DELETETASKORBOARDMODAL });
   };
   const editTask = (task: TasksType, val: Boolean) =>
     dispatch({ type: EDITTASK, payload: { task, val } });
@@ -96,6 +101,14 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const editDeleteToggle = () => dispatch({ type: EDITDELETEMENUTOGGLE });
   const deleteBoard = (id?: Id) =>
     dispatch({ type: FILTERDELETEBOARD, payload: id });
+  const openAddNewOrEditBoard = (a: "add" | "edit") => {
+    if (a === "add") dispatch({ type: OPENADDNEWBOARDMODAL });
+    if (a === "edit") dispatch({ type: OPENEDITBOARDMODAL });
+  };
+  const addNewBoard = (board: BoardType) =>
+    dispatch({ type: ADDNEWBOARD, payload: board });
+  const editBoard = () =>
+    dispatch({ type: EDITBOARD});
 
   return (
     <AppContext.Provider
@@ -112,6 +125,9 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         deleteTask,
         editDeleteToggle,
         deleteBoard,
+        addNewBoard,
+        openAddNewOrEditBoard,
+        editBoard,
       }}
     >
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

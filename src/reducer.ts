@@ -14,15 +14,19 @@ import {
   OPENBOARDMENU,
   CLOSEMODAL,
   SELECTBOARD,
-  VIEWTASK,
+  VIEWTASKMODAL,
   TOGGLESUBTASK,
   CHANGESTATUS,
-  MODIFYTASK,
+  MODIFYTASKMODAL,
   EDITTASK,
-  MODIFYDELETETASKORBOARD,
+  DELETETASKORBOARDMODAL,
   FILTERDELETETASK,
   EDITDELETEMENUTOGGLE,
   FILTERDELETEBOARD,
+  ADDNEWBOARD,
+  OPENADDNEWBOARDMODAL,
+  OPENEDITBOARDMODAL,
+  EDITBOARD,
 } from "./actions";
 // import { cloneDeep } from "lodash";
 import { statusName } from "./helpers";
@@ -52,10 +56,11 @@ const reducer: ReducerType<StateType, ActionType> = (
       return {
         ...state,
         showBoardMenu: false,
-        viewTask: false,
+        viewTaskModal: false,
         modifyTask: false,
         deleteWarning: false,
-        addNewBoardModal: false,
+        editOrAddNewBoardModal: false,
+        editBoardFlag: false,
         selectedTask: { task: null, statusIds: [], columnId: 0 },
       };
     }
@@ -67,16 +72,16 @@ const reducer: ReducerType<StateType, ActionType> = (
       }
       return { ...state, currentBoardId };
     }
-    case VIEWTASK: {
+    case VIEWTASKMODAL: {
       const { boards, currentBoardId } = state;
       const { columnId, taskId } = action.payload as ViewTaskPayload;
       const board = boards?.find((board) => board.id === currentBoardId);
       const statusIds = board?.columns.map((c) => c.id);
       const column = board?.columns.find((c) => c.id === columnId);
-      const task = column?.tasks.find((t) => t.id === taskId);
+      const task = column?.tasks?.find((t) => t.id === taskId);
       return {
         ...state,
-        viewTask: true,
+        viewTaskModal: true,
         editDeleteMenu: false,
         selectedTask: { task, statusIds, columnId },
       };
@@ -157,19 +162,20 @@ const reducer: ReducerType<StateType, ActionType> = (
         boards: newBoards,
       };
     }
-    case MODIFYTASK: {
+    case MODIFYTASKMODAL: {
       return {
         ...state,
         modifyTask: true,
-        viewTask: false,
+        viewTaskModal: false,
         editDeleteMenu: false,
       };
     }
-    case MODIFYDELETETASKORBOARD: {
+    case DELETETASKORBOARDMODAL: {
       return {
         ...state,
         modifyTask: false,
-        viewTask: false,
+        viewTaskModal: false,
+        editDeleteMenu: false,
         deleteWarning: true,
       };
     }
@@ -266,6 +272,44 @@ const reducer: ReducerType<StateType, ActionType> = (
         boards: newBoards,
         currentBoardId: newBoards[0]?.id,
         boardIds,
+      };
+    }
+    case ADDNEWBOARD: {
+      const board = action.payload as BoardType;
+      const { boards } = state;
+      let newBoards = [...boards, board];
+      const boardIds = newBoards.map((b) => b.id);
+      return {
+        ...state,
+        boards: newBoards,
+        currentBoardId: board.id,
+        boardIds,
+      };
+    }
+    case OPENADDNEWBOARDMODAL: {
+      return {
+        ...state,
+        editOrAddNewBoardModal: true,
+        editDeleteMenu: false,
+        showBoardMenu: false,
+      };
+    }
+    case OPENEDITBOARDMODAL: {
+      return {
+        ...state,
+        editOrAddNewBoardModal: true,
+        editDeleteMenu: false,
+        showBoardMenu: false,
+        editBoardFlag: true,
+      };
+    }
+    case EDITBOARD: {
+      return {
+        ...state,
+        // editOrAddNewBoardModal: true,
+        // editDeleteMenu: false,
+        // showBoardMenu: false,
+        // editBoardFlag: true,
       };
     }
     default:

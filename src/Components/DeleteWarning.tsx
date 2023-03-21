@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 import { Close } from "../assets/Icons";
 import { useGlobalContext } from "../AppContext";
 import { findBoard } from "../helpers";
-
+// delete warning for task and board
 const DeleteWarning = forwardRef<HTMLDivElement>((props, ref) => {
   const {
     closeModal = () => {},

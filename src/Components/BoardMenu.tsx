@@ -8,6 +8,7 @@ const BoardMenu = forwardRef<HTMLDivElement>((props, ref) => {
     boardIds,
     selectBoard = () => {},
     closeModal = () => {},
+    openAddNewOrEditBoard = () => {},
   } = useGlobalContext() || {};
   return (
     <Wrapper ref={ref}>
@@ -17,9 +18,10 @@ const BoardMenu = forwardRef<HTMLDivElement>((props, ref) => {
         return (
           <button
             key={id}
-            onClick={() => {
-              closeModal();
+            onClick={(e) => {
+              e.stopPropagation();
               selectBoard(id);
+              closeModal();
             }}
             className="font-bold"
           >
@@ -27,7 +29,15 @@ const BoardMenu = forwardRef<HTMLDivElement>((props, ref) => {
           </button>
         );
       })}
-      <button>Create new board</button>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          openAddNewOrEditBoard("add");
+        }}
+      >
+        Create new board
+      </button>
     </Wrapper>
   );
 });

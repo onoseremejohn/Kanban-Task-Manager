@@ -13,6 +13,7 @@ const Header = () => {
     editDeleteToggle = () => {},
     openBoardMenu = () => {},
     modify = () => {},
+    openAddNewOrEditBoard = () => {},
   } = useGlobalContext() || {};
   const currentBoard = findBoard(boards, currentBoardId);
   return (
@@ -23,6 +24,7 @@ const Header = () => {
             type="button"
             onClick={(e) => {
               e.stopPropagation();
+              openAddNewOrEditBoard("edit");
             }}
           >
             Edit Board
@@ -30,8 +32,8 @@ const Header = () => {
           <button
             type="button"
             onClick={(e) => {
-              modify("delete");
               e.stopPropagation();
+              modify("delete");
             }}
           >
             Delete Board
@@ -49,7 +51,7 @@ const Header = () => {
               e.stopPropagation();
             }}
           >
-            {currentBoard || 'No board Found'}
+            {currentBoard || "No board Found"}
           </button>
         </div>
         <div>

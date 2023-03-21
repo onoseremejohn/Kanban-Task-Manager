@@ -3,27 +3,27 @@ import BoardMenu from "../Components/BoardMenu";
 import ViewTask from "./ViewTask";
 import AddNewTask from "./ModifyTask";
 import DeleteWarning from "./DeleteWarning";
-import AddNewBoard from "./AddNewBoard";
+import EditOrAddNewBoard from "./EditOrAddNewBoard";
 import { useGlobalContext } from "../AppContext";
 import { useEffect, useRef } from "react";
 const Overlay = () => {
   const articleRef = useRef<HTMLDivElement>(null);
   const {
-    viewTask,
+    viewTaskModal,
     showBoardMenu,
     modifyTask,
     deleteWarning,
     editDeleteMenu,
-    addNewBoardModal,
+    editOrAddNewBoardModal,
     editDeleteToggle = () => {},
     closeModal = () => {},
   } = useGlobalContext() || {};
   const show =
     showBoardMenu ||
-    viewTask ||
+    viewTaskModal ||
     modifyTask ||
     deleteWarning ||
-    addNewBoardModal;
+    editOrAddNewBoardModal;
   useEffect(() => {
     const handleClick = (event: Event) => {
       if (editDeleteMenu) editDeleteToggle();
@@ -38,10 +38,10 @@ const Overlay = () => {
   return (
     <Wrapper show={show}>
       {showBoardMenu && <BoardMenu ref={articleRef} />}
-      {viewTask && <ViewTask ref={articleRef} />}
+      {viewTaskModal && <ViewTask ref={articleRef} />}
       {modifyTask && <AddNewTask ref={articleRef} />}
       {deleteWarning && <DeleteWarning ref={articleRef} />}
-      {addNewBoardModal && <AddNewBoard ref={articleRef} />}
+      {editOrAddNewBoardModal && <EditOrAddNewBoard ref={articleRef} />}
     </Wrapper>
   );
 };
