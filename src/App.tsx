@@ -60,10 +60,10 @@ const NewColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5em;
-  min-height: calc(100vh - 15rem);
+  height: calc(100vh - 8rem);
   min-width: 17rem;
   .gradient {
-    height: 100%;
+    min-height: 100%;
     position: relative;
     border-radius: var(--radius);
     background: linear-gradient(
@@ -72,6 +72,12 @@ const NewColumn = styled.div`
       rgba(130, 143, 163, 0.1),
       rgba(130, 143, 163, 0)
     );
+    cursor: pointer;
+    &:hover {
+      p {
+        color: var(--purple);
+      }
+    }
   }
   p {
     font-size: 1.2rem;

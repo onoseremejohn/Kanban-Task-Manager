@@ -23,7 +23,7 @@ const Wrapper = styled.section`
   display: flex;
   flex-direction: column;
   gap: 1.5em;
-  min-height: calc(100vh - 15rem);
+  min-height: calc(100vh - 8rem);
   min-width: 17rem;
   .title {
     text-transform: uppercase;

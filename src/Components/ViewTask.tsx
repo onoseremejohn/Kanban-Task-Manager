@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Close, MenuIcon } from "../assets/Icons";
+import { Close, MenuIcon, ChevronDown } from "../assets/Icons";
 import { forwardRef, useState, useRef, MouseEvent, TouchEvent } from "react";
 import { useGlobalContext } from "../AppContext";
 import { statusName, countCompletedSubtasks } from "../helpers";
@@ -71,22 +71,23 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
             <button
               type="button"
               onClick={(e) => {
-                modify('delete');
+                modify("delete");
                 e.stopPropagation();
               }}
+              style={{ color: "#ea5555" }}
             >
               Delete task
             </button>
           </div>
         )}
       </div>
-      <p>{description || "no description"}</p>
+      <p className="description">{description || "no description"}</p>
       <h6>
-        Subtasts ({countCompletedSubtasks(subtasks)} of {subtasks.length})
+        Subtasks ({countCompletedSubtasks(subtasks)} of {subtasks.length})
       </h6>
       {subtasks.map((s) => {
         return (
-          <label key={s.id}>
+          <label key={s.id} className={s.isCompleted ? "completed" : ""}>
             <input
               type="checkbox"
               checked={s.isCompleted}
@@ -98,8 +99,13 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
       })}
       <h6>Current Status</h6>
       <div style={{ position: "relative" }}>
-        <button type="button" className="status" onClick={toggleShow}>
+        <button
+          type="button"
+          className={showStatuses ? "status show" : "status"}
+          onClick={toggleShow}
+        >
           {status}
+          <ChevronDown />
         </button>
         {showStatuses && (
           <div className="dropdown" ref={showRef}>
@@ -126,43 +132,66 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
 });
 
 export const Wrapper = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.modalText};
   position: absolute;
   left: 50%;
   top: 10vh;
   transform: translateX(-50%);
   min-height: 70vh;
   width: 85vw;
+  max-width: 500px;
   padding: 2.85em 1.5em;
   border-radius: var(--radius);
   label {
     display: flex;
     align-items: center;
-    background-color: #f4f7fd;
+    background-color: ${({ theme }) => theme.body};
+    color: ${({ theme }) => theme.headerText};
     border-radius: var(--radius);
-    padding: 0.5em 1em;
+    font-weight: 600;
+    padding: 0.6em 1em;
     gap: 0.8em;
     margin-bottom: 0.5em;
+    transition: all 0.1s linear;
   }
-  p {
+  input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+  }
+  .description {
+    font-size: 1rem;
     margin-bottom: 1.5em;
+    color: var(--grey);
   }
   h4 {
+    color: ${({ theme }) => theme.headerText};
     margin-bottom: 0;
   }
   h6 {
+    font-size: 0.75rem;
     margin-bottom: 0.5em;
   }
   .status {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
     border: 2px solid rgba(130, 143, 163, 0.4);
     padding: 0.5em 1em;
-    text-align: left;
     border-radius: var(--radius);
     margin-bottom: 1em;
+    color: ${({ theme }) => theme.headerText};
     &:focus {
       border-color: #635fc7;
+    }
+    svg {
+      transition: var(--transition);
+    }
+  }
+  .status.show {
+    svg {
+      rotate: 180deg;
     }
   }
   .close {
@@ -183,8 +212,9 @@ export const Wrapper = styled.div`
     position: absolute;
     top: calc(100% + 0.5em);
     width: 100%;
-    background-color: white;
+    background-color: ${({ theme }) => theme.modifyToggle};
     button {
+      color: inherit;
       width: 100%;
       text-align: start;
       padding: 0.5em 1em;
@@ -196,13 +226,22 @@ export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     box-shadow: var(--bs);
-    /* padding: 1em; */
+
+    background-color: ${({ theme }) => theme.modifyToggle};
+    color: var(--grey);
     button {
+      background-color: inherit;
+      color: inherit;
       font-size: 1rem;
       text-align: left;
       padding: 0.5em 1em;
-      background-color: white;
+      border-radius: 50px;
     }
+  }
+  .completed {
+    font-weight: 400;
+    text-decoration: line-through;
+    color: gray;
   }
 `;
 

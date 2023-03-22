@@ -140,13 +140,15 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
 });
 
 const Wrapper = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.modalText};
   position: absolute;
   left: 50%;
   top: 10vh;
   transform: translateX(-50%);
   min-height: 70vh;
   width: 85vw;
+  max-width: 500px;
   padding: 2.85em 1.5em;
   border-radius: var(--radius);
   .close {
@@ -159,6 +161,9 @@ const Wrapper = styled.div`
     display: grid;
     place-content: center;
   }
+  h4 {
+    color: ${({ theme }) => theme.headerText};
+  }
   form {
     display: flex;
     flex-direction: column;
@@ -169,10 +174,16 @@ const Wrapper = styled.div`
     flex-direction: column;
     gap: 0.5em;
   }
+  label {
+    color: ${({ theme }) => theme.modalText};
+    font-weight: 500;
+  }
   input {
-    height: 2em;
+    height: 3em;
     padding: 0.5em 1em;
     border-radius: var(--radius);
+    background-color: inherit;
+    color: inherit;
     outline: none;
     border: 2px solid #828fa366;
     &:focus-visible {
@@ -199,14 +210,14 @@ const Wrapper = styled.div`
   }
   .column {
     background-color: #f0effa;
-    padding: 0.5em 1em;
+    padding: 0.75em 1em;
     border-radius: 20px;
     color: var(--purple);
     font-weight: 600;
   }
   .submit {
     background: #635fc7;
-    padding: 0.5em 1em;
+    padding: 0.75em 1em;
     color: white;
     font-weight: 600;
     border-radius: 20px;

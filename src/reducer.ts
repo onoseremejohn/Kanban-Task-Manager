@@ -28,6 +28,7 @@ import {
   OPENEDITBOARDMODAL,
   EDITBOARD,
   ADDNEWCOLUMNMODAL,
+  TOGGLETHEME,
 } from "./actions";
 // import { cloneDeep } from "lodash";
 import { statusName } from "./helpers";
@@ -333,6 +334,11 @@ const reducer: ReducerType<StateType, ActionType> = (
         addNewColumnFlag: true,
         editOrAddNewBoardModal: true,
       };
+    }
+    case TOGGLETHEME: {
+      let { theme } = state;
+      theme = theme === "light" ? "dark" : "light";
+      return { ...state, theme };
     }
     default:
       throw new Error(`No Matching "${action.type}" - action type`);

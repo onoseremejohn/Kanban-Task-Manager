@@ -11,7 +11,6 @@ const SingleTask = ({
   const { openTask = () => {} } = useGlobalContext() || {};
   return (
     <Wrapper
-      style={{ backgroundColor: "white" }}
       role="button"
       aria-label="view task"
       onClick={(e) => {
@@ -34,7 +33,11 @@ const Wrapper = styled.article`
   min-height: 2.5rem;
   font-size: 1rem;
   border-radius: var(--radius);
+  background-color: ${({ theme }) => theme.white};
   cursor: grab;
+  &:hover {
+    opacity: 50%;
+  }
   h4 {
     font-size: 1rem;
     font-weight: var(--fw-bold);

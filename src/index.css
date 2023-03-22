@@ -46,7 +46,6 @@ body {
   font-weight: var(--fw-reg);
   line-height: 1.5;
   font-size: 0.875rem;
-  background-color: var(--clr-grey);
 }
 
 img {
@@ -209,8 +208,8 @@ main {
   overflow: scroll;
   display: flex;
   gap: 2em;
-  min-height: calc(100vh - 5rem);
-  background-color: #f4f7fd;
+  min-height: calc(100vh - 8rem);
+  cursor: move;
 }
 
 ::-webkit-scrollbar {

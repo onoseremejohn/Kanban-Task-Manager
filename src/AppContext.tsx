@@ -2,6 +2,10 @@ declare module "styled-components" {
   export interface DefaultTheme {
     body: string;
     text: string;
+    white: string;
+    modalText: string;
+    modifyToggle: string;
+    headerText: string;
   }
 }
 import data from "./assets/json/data.json";
@@ -34,23 +38,31 @@ import {
   OPENEDITBOARDMODAL,
   EDITBOARD,
   ADDNEWCOLUMNMODAL,
+  TOGGLETHEME,
 } from "./actions";
 import { StateType, Id, TasksType, BoardType } from "./types";
 const lightTheme = {
-  body: "#FFF",
+  body: "#f4f7fd;",
   text: "#363537",
+  white: "#fff",
+  modalText: "#828fa3",
+  headerText: "#000",
+  modifyToggle: "#fff",
 };
 
 const darkTheme = {
-  body: "#363537",
+  body: "#20212c",
   text: "#FAFAFA",
+  white: "#2b2c37",
+  modalText: "#fff",
+  headerText: "#fff",
+  modifyToggle: "#20212c",
 };
 
 const GlobalStyles = createGlobalStyle`
   body {
     background-color: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
-    transition: all 0.3s linear;
   }
 `;
 
@@ -58,7 +70,7 @@ const AppContext = createContext<StateType | null>(null);
 
 const AppProvider = ({ children }: { children: ReactNode }) => {
   const initialState: StateType = {
-    theme: "light",
+    theme: "dark",
     boards: [],
     showBoardMenu: false,
     viewTaskModal: false,
@@ -112,6 +124,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: ADDNEWBOARD, payload: board });
   const editBoard = (board: BoardType) =>
     dispatch({ type: EDITBOARD, payload: board });
+  const toggleTheme = () => dispatch({ type: TOGGLETHEME });
 
   return (
     <AppContext.Provider
@@ -131,6 +144,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         addNewBoard,
         openAddNewOrEditBoard,
         editBoard,
+        toggleTheme,
       }}
     >
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

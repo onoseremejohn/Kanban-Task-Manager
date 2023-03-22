@@ -54,7 +54,7 @@ const Wrapper = styled.div<WrapperProps>`
   position: fixed;
   inset: 0;
   visibility: ${({ show }) => (show ? "visible" : "hidden")};
-  z-index: ${({ show }) => (show ? "200" : "-100")};
+  z-index: ${({ show }) => (show ? "200" : "1")};
   transition: var(--transition);
   background-color: ${({ show }) =>
     show ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0)"};

@@ -25,7 +25,7 @@ export interface ActionType {
 }
 
 export interface StateType {
-  theme: string;
+  theme: "light" | "dark";
   boards: BoardType[];
   boardIds: Id[];
   currentBoardId: Id;
@@ -52,6 +52,7 @@ export interface StateType {
   openAddNewOrEditBoard?(a: "add" | "edit" | "column"): void;
   addNewBoard?(a: BoardType): void;
   editBoard?(a: BoardType): void;
+  toggleTheme?(): void;
 }
 
 export type ReducerType<S, A> = (state: S, action: A) => StateType;

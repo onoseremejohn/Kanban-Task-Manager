@@ -55,13 +55,14 @@ const DeleteWarning = forwardRef<HTMLDivElement>((props, ref) => {
 });
 
 const Wrapper = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.white};
   position: absolute;
   left: 50%;
   top: 10vh;
   transform: translateX(-50%);
   min-height: 70vh;
   width: 85vw;
+  max-width: 500px;
   padding: 2.85em 1.5em;
   border-radius: var(--radius);
   h4 {
@@ -87,7 +88,8 @@ const Wrapper = styled.div`
     gap: 2.5em;
     button {
       border-radius: 20px;
-      padding: 0.5em 0;
+      padding: 0.75em 0;
+      font-weight: 600;
     }
   }
   .delete {

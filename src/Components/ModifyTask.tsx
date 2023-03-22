@@ -8,7 +8,7 @@ import {
 } from "react";
 import styled from "styled-components";
 import { useGlobalContext } from "../AppContext";
-import { Close } from "../assets/Icons";
+import { Close, ChevronDown } from "../assets/Icons";
 import { nanoid } from "nanoid";
 import { TasksType, Id } from "../types";
 import { statusName } from "../helpers";
@@ -192,8 +192,13 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
         )}
         <div className="form-control" style={{ position: "relative" }}>
           <label>Status</label>
-          <button type="button" className="status" onClick={toggleShow}>
+          <button
+            type="button"
+            className={show ? "status show" : "status"}
+            onClick={toggleShow}
+          >
             {statusName(boards, currentBoardId, tempStatusId)}
+            <ChevronDown />
           </button>
           {show && (
             <div className="dropdown" ref={showRef}>
@@ -224,15 +229,19 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
 });
 
 const Wrapper = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.white};
   position: absolute;
   left: 50%;
   top: 10vh;
   transform: translateX(-50%);
   min-height: 70vh;
   width: 85vw;
+  max-width: 500px;
   padding: 2.85em 1.5em;
   border-radius: var(--radius);
+  h4 {
+    color: ${({ theme }) => theme.headerText};
+  }
   .close {
     position: absolute;
     right: 3%;
@@ -254,10 +263,12 @@ const Wrapper = styled.div`
     gap: 0.5em;
   }
   label {
-    color: var(--grey);
+    color: ${({ theme }) => theme.modalText};
     font-weight: 500;
   }
   textarea {
+    background-color: inherit;
+    color: inherit;
     border-radius: var(--radius);
     resize: none;
     padding: 0.5em 1em;
@@ -268,7 +279,9 @@ const Wrapper = styled.div`
     }
   }
   input {
-    height: 2em;
+    color: inherit;
+    background-color: inherit;
+    height: 3em;
     padding: 0.5em 1em;
     border-radius: var(--radius);
     outline: none;
@@ -282,19 +295,30 @@ const Wrapper = styled.div`
   }
   .subtask {
     background-color: #f0effa;
-    padding: 0.5em 1em;
+    padding: 0.75em 0em;
     border-radius: 20px;
     color: var(--purple);
     font-weight: 600;
   }
   .status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     border: 2px solid rgba(130, 143, 163, 0.4);
     padding: 0.5em 1em;
-    text-align: left;
+    color: inherit;
     border-radius: var(--radius);
     margin-bottom: 1em;
     &:focus {
       border-color: #635fc7;
+    }
+    svg {
+      transition: var(--transition);
+    }
+  }
+  .status.show {
+    svg {
+      rotate: 180deg;
     }
   }
   .dropdown {
@@ -305,8 +329,10 @@ const Wrapper = styled.div`
     position: absolute;
     bottom: calc(-100% - 0.5em);
     width: 100%;
-    background-color: white;
+    background-color: ${({ theme }) => theme.modifyToggle};
+    color: var(--grey);
     button {
+      color: inherit;
       width: 100%;
       text-align: start;
       padding: 0.5em 1em;
@@ -314,7 +340,7 @@ const Wrapper = styled.div`
   }
   .submit {
     background: #635fc7;
-    padding: 0.5em 1em;
+    padding: 0.75em 0em;
     color: white;
     font-weight: 600;
     border-radius: 20px;

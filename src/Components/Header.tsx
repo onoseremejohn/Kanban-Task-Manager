@@ -77,7 +77,7 @@ const Header = () => {
           </button>
           <button
             type="button"
-            style={{ padding: "0.4em" }}
+            className="threedots"
             onClick={(e) => {
               editDeleteToggle();
               e.stopPropagation();
@@ -95,12 +95,13 @@ const Wrapper = styled.header`
   min-height: 5rem;
   position: fixed;
   z-index: 15;
-  background-color: white;
+  background-color: ${({ theme }) => theme.white};
   width: 100%;
   top: 0;
   left: 0;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid var(--grey);
   .center {
     width: 90vw;
     margin: 0 auto;
@@ -123,9 +124,21 @@ const Wrapper = styled.header`
     padding: 0.6em;
     aspect-ratio: 2.5/1;
     border-radius: 20px;
+    transition: var(--transition);
+    &:hover {
+      background-color: #a8a4ff;
+    }
+  }
+  .threedots {
+    padding: 0.4em;
+    transition: var(--transition);
+    &:hover {
+      background-color: ${({ theme }) => theme.body};
+    }
   }
   .board {
     font-size: clamp(1.2rem, 3vw, 1.5rem);
+    color: ${({ theme }) => theme.text};
   }
   svg {
     font-size: 1.2rem;
