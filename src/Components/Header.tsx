@@ -4,6 +4,8 @@ import {
   AddTaskMobile,
   ChevronDown,
   LogoMobile,
+  LogoDark,
+  LogoLight,
 } from "../assets/Icons";
 import { useGlobalContext } from "../AppContext";
 import { findBoard } from "../helpers";
@@ -47,44 +49,54 @@ const Header = () => {
         </div>
       )}
       <div className="center">
-        <div className="gap">
-          <LogoMobile />
-          <button
-            type="button"
-            className="board font-bold"
-            onClick={(e) => {
-              openBoardMenu();
-              e.stopPropagation();
-            }}
-          >
-            {currentBoard || "No board Found"}
-            {"  "}
-            <span className={showBoardMenu ? "dropdown rotate" : "dropdown"}>
-              <ChevronDown />
-            </span>
-          </button>
+        <div className="left">
+          <LogoLight />
         </div>
-        <div>
-          <button
-            type="button"
-            className="plus"
-            onClick={(e) => {
-              modify();
-              e.stopPropagation();
-            }}
-          >
-            <AddTaskMobile />
-          </button>
-          <button
-            type="button"
-            className="threedots"
-            onClick={(e) => {
-              editDeleteToggle();
-              e.stopPropagation();
-            }}
-          >
-            <ThreeDots />
-          </button>
+        <div className="mobile">
+          <div>
+            <span className="mobile-logo">
+              <LogoMobile />
+            </span>
+            <button
+              type="button"
+              className="board font-bold"
+              onClick={(e) => {
+                openBoardMenu();
+                e.stopPropagation();
+              }}
+            >
+              {currentBoard || "No board Found"}
+              {"  "}
+              <span className={showBoardMenu ? "dropdown rotate" : "dropdown"}>
+                <ChevronDown />
+              </span>
+            </button>
+            <h1 className="board font-bold">{currentBoard}</h1>
+          </div>
+          <div>
+            <button
+              type="button"
+              className="plus"
+              onClick={(e) => {
+                modify();
+                e.stopPropagation();
+              }}
+            >
+              <AddTaskMobile />
+              <span className="text">Add New Task</span>
+            </button>
+
+            <button
+              type="button"
+              className="threedots"
+              onClick={(e) => {
+                editDeleteToggle();
+                e.stopPropagation();
+              }}
+            >
+              <ThreeDots />
+            </button>
+          </div>
         </div>
       </div>
     </Wrapper>
@@ -92,7 +104,7 @@ const Header = () => {
 };
 
 const Wrapper = styled.header`
-  min-height: 5rem;
+  height: 5rem;
   position: fixed;
   z-index: 15;
   background-color: ${({ theme }) => theme.white};
@@ -101,19 +113,21 @@ const Wrapper = styled.header`
   left: 0;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--grey);
+  border-bottom: 1px solid ${({ theme }) => theme.borderLine};
+  .left {
+    display: none;
+  }
   .center {
     width: 90vw;
     margin: 0 auto;
+  }
+  .mobile {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    div {
+    > div {
       display: flex;
       align-items: center;
-      gap: 1em;
-    }
-    .gap {
       gap: 2em;
     }
   }
@@ -122,11 +136,14 @@ const Wrapper = styled.header`
     place-items: center;
     background-color: #635fc7;
     padding: 0.6em;
-    aspect-ratio: 2.5/1;
+    width: 3em;
     border-radius: 20px;
     transition: var(--transition);
     &:hover {
       background-color: #a8a4ff;
+    }
+    .text {
+      display: none;
     }
   }
   .threedots {
@@ -140,8 +157,12 @@ const Wrapper = styled.header`
     font-size: clamp(1.2rem, 3vw, 1.5rem);
     color: ${({ theme }) => theme.text};
   }
+  h1.board {
+    display: none;
+  }
   svg {
     font-size: 1.2rem;
+    cursor: pointer;
   }
   .show {
     position: absolute;
@@ -173,6 +194,47 @@ const Wrapper = styled.header`
   }
   .dropdown.rotate svg {
     rotate: 180deg;
+  }
+  @media screen and (min-width: 768px) {
+    align-items: stretch;
+    .left {
+      display: flex;
+      align-items: center;
+      border-right: 1px solid ${({ theme }) => theme.borderLine};
+    }
+    .center {
+      display: grid;
+      grid-template-columns: 30% 1fr;
+    }
+    .mobile {
+      padding-left: 2em;
+      .mobile-logo {
+        display: none;
+      }
+    }
+    span.dropdown {
+      display: none;
+    }
+    .plus {
+      width: 12em;
+      display: flex;
+      gap: 1em;
+      padding: 1em;
+      justify-content: center;
+      .text {
+        display: block;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+    }
+    button.board {
+      display: none;
+    }
+    h1.board {
+      display: block;
+      margin: 0;
+    }
   }
 `;
 

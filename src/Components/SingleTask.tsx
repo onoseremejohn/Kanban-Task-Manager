@@ -33,6 +33,7 @@ const Wrapper = styled.article`
   min-height: 2.5rem;
   font-size: 1rem;
   border-radius: var(--radius);
+  border: 1px solid #8686861a;
   background-color: ${({ theme }) => theme.white};
   cursor: grab;
   &:hover {

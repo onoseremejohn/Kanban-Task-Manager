@@ -1,27 +1,28 @@
 import styled from "styled-components";
-import { forwardRef } from "react";
 import BoardNames from "./BoardNames";
 import ModeToggler from "./ModeToggler";
-const BoardMenu = forwardRef<HTMLDivElement>((props, ref) => {
+const Sidebar = () => {
   return (
-    <Wrapper ref={ref}>
+    <Wrapper>
       <BoardNames />
       <ModeToggler />
     </Wrapper>
   );
-});
+};
 
-const Wrapper = styled.div`
-  position: absolute;
+const Wrapper = styled.aside`
+  display: none;
+  @media screen and (min-width: 768px) {
+    display: block;
+  }
+  position: fixed;
+  left: 0;
   top: 5rem;
-  left: 50%;
-  transform: translateX(-50%);
+  height: calc(100vh - 5rem);
+  width: 32vw;
   background-color: ${({ theme }) => theme.white};
-  color: var(--grey);
-  border-radius: var(--radius);
-  padding: 1.2em 2em;
-  width: 80vw;
-  max-width: 300px;
+  border-right: 1px solid ${({ theme }) => theme.borderLine};
+  padding: 2rem 5vw;
   button {
     color: inherit;
     font-size: 1.1rem;
@@ -32,7 +33,8 @@ const Wrapper = styled.div`
     font-weight: var(--fw-medium);
     font-size: 1rem;
     margin: 0;
-    margin-bottom: 0.5em;
+    margin-bottom: 1.5em;
+    color: var(--grey);
   }
   ul {
     display: flex;
@@ -56,14 +58,15 @@ const Wrapper = styled.div`
       background-color: var(--purple);
       z-index: -1;
       top: 0;
-      left: -2em;
-      width: calc(100% + 2em);
+      left: -5vw;
+      width: calc(100% + 5vw);
       height: 100%;
       border-radius: 0 20px 20px 0;
     }
   }
   ul li:not(.active) {
     position: relative;
+    color: var(--grey);
     &:hover {
       color: white;
       &::before {
@@ -72,8 +75,8 @@ const Wrapper = styled.div`
         background-color: #a8a4ff;
         z-index: -1;
         top: 0;
-        left: -2em;
-        width: calc(100% + 2em);
+        left: -5vw;
+        width: calc(100% + 5vw);
         height: 100%;
         border-radius: 0 20px 20px 0;
       }
@@ -88,6 +91,7 @@ const Wrapper = styled.div`
     }
   }
   .icons {
+    position: absolute;
     border-radius: var(--radius);
     background-color: ${({ theme }) => theme.body};
     display: flex;
@@ -129,4 +133,4 @@ const Wrapper = styled.div`
   }
 `;
 
-export default BoardMenu;
+export default Sidebar;

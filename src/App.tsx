@@ -3,7 +3,7 @@ import Header from "./Components/Header";
 import Overlay from "./Components/Overlay";
 import SingleColumn from "./Components/SingleColumn";
 import styled from "styled-components";
-
+import Sidebar from "./Components/Sidebar";
 export default () => {
   const {
     boards,
@@ -42,6 +42,7 @@ export default () => {
           </NewColumn>
         )}
       </main>
+      <Sidebar />
       <Overlay />
     </>
   );

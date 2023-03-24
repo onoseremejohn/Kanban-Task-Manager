@@ -224,6 +224,7 @@ const Wrapper = styled.div`
   }
   input:disabled {
     opacity: 50%;
+    cursor: not-allowed;
   }
 `;
 

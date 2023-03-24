@@ -6,6 +6,7 @@ declare module "styled-components" {
     modalText: string;
     modifyToggle: string;
     headerText: string;
+    borderLine: string
   }
 }
 import data from "./assets/json/data.json";
@@ -48,6 +49,7 @@ const lightTheme = {
   modalText: "#828fa3",
   headerText: "#000",
   modifyToggle: "#fff",
+  borderLine: "#e4ebfa",
 };
 
 const darkTheme = {
@@ -57,6 +59,7 @@ const darkTheme = {
   modalText: "#fff",
   headerText: "#fff",
   modifyToggle: "#20212c",
+  borderLine: "#3e3f4e",
 };
 
 const GlobalStyles = createGlobalStyle`

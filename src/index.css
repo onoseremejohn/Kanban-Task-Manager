@@ -203,7 +203,7 @@ html {
 }
 
 main {
-  padding: 7em 2em 2em 2em;
+  padding: 7rem 2em 2em 2em;
   margin: 0 auto;
   overflow: scroll;
   display: flex;
@@ -211,7 +211,11 @@ main {
   min-height: calc(100vh - 8rem);
   cursor: move;
 }
-
+@media screen and (min-width: 768px) {
+  main {
+    margin-left: 32vw;
+  }
+}
 ::-webkit-scrollbar {
   display: none;
 }
