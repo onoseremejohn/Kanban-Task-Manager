@@ -202,25 +202,8 @@ html {
   background: var(--clr-grey-1);
 }
 
-main {
-  padding: 7rem 2em 2em 2em;
-  margin: 0 auto;
-  overflow: scroll;
-  display: flex;
-  gap: 2em;
-  min-height: calc(100vh - 8rem);
-  cursor: move;
-  transition: margin-left 0.3s ease-in-out;
-}
-@media screen and (min-width: 768px) {
-  main.open {
-    margin-left: calc(300px + 2em);
-  }
-  main.close {
-    margin-left: 0;
-  }
-}
-::-webkit-scrollbar {
+
+body::-webkit-scrollbar {
   display: none;
 }
 
@@ -242,3 +225,29 @@ main {
 .font-medium {
   font-weight: var(--fw-medium);
 }
+
+.show-sidebar {
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  left: 0;
+  bottom: 2rem;
+  width: 3.5rem;
+  height: 3rem;
+  background: var(--purple);
+  border-radius: 0 25px 25px 0;
+  transition: var(--transition);
+}
+
+.show-sidebar:hover {
+  background-color: #a8a4ff;
+}
+
+.show-sidebar.open {
+  display: none;
+}
+
+.show-sidebar.close {
+  display: flex;
+}
+

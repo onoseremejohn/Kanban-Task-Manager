@@ -30,7 +30,6 @@ const Wrapper = styled.article`
   box-shadow: var(--bs);
   padding: 1.5rem 1rem;
   width: 17rem;
-  min-height: 2.5rem;
   font-size: 1rem;
   border-radius: var(--radius);
   border: 1px solid #8686861a;

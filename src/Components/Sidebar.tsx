@@ -10,7 +10,8 @@ const Sidebar = () => {
       <BoardNames />
       <ModeToggler />
       <button
-        className="toggle-sidebar font-bold"
+        type="button"
+        className="hide-sidebar font-bold"
         onClick={() => sidebar("close")}
       >
         <HideSidebar /> Hide Sidebar
@@ -29,6 +30,7 @@ const Wrapper = styled.aside<WrapperProps>`
     display: block;
   }
   position: fixed;
+  z-index: 4;
   left: 0;
   top: 5rem;
   height: calc(100vh - 5rem);
@@ -37,7 +39,7 @@ const Wrapper = styled.aside<WrapperProps>`
     sidebarOpen ? "translateX(0)" : "translateX(-300px) translateX(-2em)"};
   background-color: ${({ theme }) => theme.white};
   border-right: 1px solid ${({ theme }) => theme.borderLine};
-  padding: 1em 2em;
+  padding: 2em;
   transition: transform 0.3s ease-in-out;
   button {
     color: inherit;
@@ -149,7 +151,7 @@ const Wrapper = styled.aside<WrapperProps>`
       }
     }
   }
-  .toggle-sidebar {
+  .hide-sidebar {
     position: absolute;
     bottom: 5%;
     width: auto;

@@ -230,11 +230,15 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.white};
-  position: absolute;
-  left: 50%;
-  top: 10vh;
-  transform: translateX(-50%);
-  min-height: 70vh;
+  /* position: absolute; */
+  /* left: 50%; */
+  /* top: 10vh; */
+  /* transform: translateX(-50%); */
+  /* min-height: 70vh; */
+  position: relative;
+  height: auto;
+  max-height: 90vh;
+  overflow-y: scroll;
   width: 85vw;
   max-width: 500px;
   padding: 2.85em 1.5em;

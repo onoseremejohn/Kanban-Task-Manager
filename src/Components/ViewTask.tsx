@@ -134,11 +134,14 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
 export const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.white};
   color: ${({ theme }) => theme.modalText};
-  position: absolute;
+  /* position: absolute;
   left: 50%;
   top: 10vh;
   transform: translateX(-50%);
-  min-height: 70vh;
+  min-height: 70vh; */
+  position: relative;
+  height: auto;
+  max-height: 90vh;
   width: 85vw;
   max-width: 500px;
   padding: 2.85em 1.5em;
@@ -153,7 +156,7 @@ export const Wrapper = styled.div`
     padding: 0.6em 1em;
     gap: 0.8em;
     margin-bottom: 0.5em;
-    transition: all 0.1s linear;
+    transition: color 0.1s linear, text-decoration 0.1s linear;
   }
   input[type="checkbox"] {
     width: 15px;

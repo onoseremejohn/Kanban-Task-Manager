@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import BoardMenu from "../Components/BoardMenu";
 import ViewTask from "./ViewTask";
-import AddNewTask from "./ModifyTask";
+import ModifyTask from "./ModifyTask";
 import DeleteWarning from "./DeleteWarning";
 import EditOrAddNewBoard from "./EditOrAddNewBoard";
 import { useGlobalContext } from "../AppContext";
@@ -39,7 +39,7 @@ const Overlay = () => {
     <Wrapper show={show}>
       {showBoardMenu && <BoardMenu ref={articleRef} />}
       {viewTaskModal && <ViewTask ref={articleRef} />}
-      {modifyTask && <AddNewTask ref={articleRef} />}
+      {modifyTask && <ModifyTask ref={articleRef} />}
       {deleteWarning && <DeleteWarning ref={articleRef} />}
       {editOrAddNewBoardModal && <EditOrAddNewBoard ref={articleRef} />}
     </Wrapper>
@@ -58,6 +58,9 @@ const Wrapper = styled.div<WrapperProps>`
   transition: var(--transition);
   background-color: ${({ show }) =>
     show ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0)"};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default Overlay;
