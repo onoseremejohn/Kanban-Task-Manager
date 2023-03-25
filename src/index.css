@@ -126,7 +126,7 @@ h5 {
     line-height: 1;
   }
 }
-@media (min-width: 1500px) {
+/* @media (min-width: 1500px) {
   h1 {
     font-size: 4rem;
   }
@@ -151,7 +151,7 @@ h5 {
   h4 {
     line-height: 1;
   }
-}
+} */
 
 /* General styles */
 
@@ -210,10 +210,14 @@ main {
   gap: 2em;
   min-height: calc(100vh - 8rem);
   cursor: move;
+  transition: margin-left 0.3s ease-in-out;
 }
 @media screen and (min-width: 768px) {
-  main {
-    margin-left: 32vw;
+  main.open {
+    margin-left: calc(300px + 2em);
+  }
+  main.close {
+    margin-left: 0;
   }
 }
 ::-webkit-scrollbar {

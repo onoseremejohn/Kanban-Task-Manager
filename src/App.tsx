@@ -8,6 +8,7 @@ export default () => {
   const {
     boards,
     currentBoardId,
+    sidebarOpen,
     openAddNewOrEditBoard = () => {},
   } = useGlobalContext() || {};
   const data = boards?.find((board) => board.id === currentBoardId);
@@ -15,7 +16,7 @@ export default () => {
   return (
     <>
       <Header />
-      <main>
+      <main className={sidebarOpen ? "open" : "close"}>
         {data?.columns.map((x) => {
           return <SingleColumn key={x.id} {...x} />;
         })}

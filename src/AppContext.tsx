@@ -6,7 +6,7 @@ declare module "styled-components" {
     modalText: string;
     modifyToggle: string;
     headerText: string;
-    borderLine: string
+    borderLine: string;
   }
 }
 import data from "./assets/json/data.json";
@@ -40,6 +40,7 @@ import {
   EDITBOARD,
   ADDNEWCOLUMNMODAL,
   TOGGLETHEME,
+  SIDEBAR,
 } from "./actions";
 import { StateType, Id, TasksType, BoardType } from "./types";
 const lightTheme = {
@@ -86,6 +87,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     editOrAddNewBoardModal: false,
     editBoardFlag: false,
     addNewColumnFlag: false,
+    sidebarOpen: true,
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const isLight = state.theme === "light";
@@ -128,6 +130,8 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const editBoard = (board: BoardType) =>
     dispatch({ type: EDITBOARD, payload: board });
   const toggleTheme = () => dispatch({ type: TOGGLETHEME });
+  const sidebar = (val: "open" | "close") =>
+    dispatch({ type: SIDEBAR, payload: val });
 
   return (
     <AppContext.Provider
@@ -148,6 +152,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         openAddNewOrEditBoard,
         editBoard,
         toggleTheme,
+        sidebar,
       }}
     >
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

@@ -29,6 +29,7 @@ import {
   EDITBOARD,
   ADDNEWCOLUMNMODAL,
   TOGGLETHEME,
+  SIDEBAR,
 } from "./actions";
 // import { cloneDeep } from "lodash";
 import { statusName } from "./helpers";
@@ -339,6 +340,11 @@ const reducer: ReducerType<StateType, ActionType> = (
       let { theme } = state;
       theme = theme === "light" ? "dark" : "light";
       return { ...state, theme };
+    }
+    case SIDEBAR: {
+      let val = action.payload as "open" | "close";
+      if (val === "open") return { ...state, sidebarOpen: true };
+      if (val === "close") return { ...state, sidebarOpen: false };
     }
     default:
       throw new Error(`No Matching "${action.type}" - action type`);

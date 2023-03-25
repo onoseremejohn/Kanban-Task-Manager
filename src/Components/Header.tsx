@@ -16,6 +16,7 @@ const Header = () => {
     boards,
     showBoardMenu,
     editDeleteMenu,
+    theme,
     editDeleteToggle = () => {},
     openBoardMenu = () => {},
     modify = () => {},
@@ -50,7 +51,7 @@ const Header = () => {
       )}
       <div className="center">
         <div className="left">
-          <LogoLight />
+          {theme === "dark" ? <LogoLight /> : <LogoDark />}
         </div>
         <div className="mobile">
           <div>
@@ -203,8 +204,10 @@ const Wrapper = styled.header`
       border-right: 1px solid ${({ theme }) => theme.borderLine};
     }
     .center {
+      width: 100%;
+      padding: 0 2em;
       display: grid;
-      grid-template-columns: 30% 1fr;
+      grid-template-columns: calc(300px) 1fr;
     }
     .mobile {
       padding-left: 2em;

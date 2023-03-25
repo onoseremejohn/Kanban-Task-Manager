@@ -1,16 +1,29 @@
 import styled from "styled-components";
 import BoardNames from "./BoardNames";
 import ModeToggler from "./ModeToggler";
+import { HideSidebar } from "../assets/Icons";
+import { useGlobalContext } from "../AppContext";
 const Sidebar = () => {
+  const { sidebar = () => {}, sidebarOpen } = useGlobalContext() || {};
   return (
-    <Wrapper>
+    <Wrapper sidebarOpen={sidebarOpen}>
       <BoardNames />
       <ModeToggler />
+      <button
+        className="toggle-sidebar font-bold"
+        onClick={() => sidebar("close")}
+      >
+        <HideSidebar /> Hide Sidebar
+      </button>
     </Wrapper>
   );
 };
 
-const Wrapper = styled.aside`
+interface WrapperProps {
+  sidebarOpen?: boolean;
+}
+
+const Wrapper = styled.aside<WrapperProps>`
   display: none;
   @media screen and (min-width: 768px) {
     display: block;
@@ -19,10 +32,13 @@ const Wrapper = styled.aside`
   left: 0;
   top: 5rem;
   height: calc(100vh - 5rem);
-  width: 32vw;
+  width: calc(300px + 2em);
+  transform: ${({ sidebarOpen }) =>
+    sidebarOpen ? "translateX(0)" : "translateX(-300px) translateX(-2em)"};
   background-color: ${({ theme }) => theme.white};
   border-right: 1px solid ${({ theme }) => theme.borderLine};
-  padding: 2rem 5vw;
+  padding: 1em 2em;
+  transition: transform 0.3s ease-in-out;
   button {
     color: inherit;
     font-size: 1.1rem;
@@ -92,12 +108,14 @@ const Wrapper = styled.aside`
   }
   .icons {
     position: absolute;
+    bottom: 12%;
     border-radius: var(--radius);
     background-color: ${({ theme }) => theme.body};
     display: flex;
     gap: 2em;
     justify-content: center;
-    padding: 0.5em 0;
+    padding: 1em 0;
+    width: calc(100% - 4em);
   }
   .switch {
     position: relative;
@@ -129,6 +147,17 @@ const Wrapper = styled.aside`
       &:checked + span::before {
         left: 21px;
       }
+    }
+  }
+  .toggle-sidebar {
+    position: absolute;
+    bottom: 5%;
+    width: auto;
+    color: var(--grey);
+    text-align: left;
+    transition: var(--transition);
+    &:hover {
+      opacity: 0.5;
     }
   }
 `;

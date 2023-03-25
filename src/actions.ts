@@ -17,3 +17,4 @@ export const ADDNEWCOLUMNMODAL = "ADDNEWCOLUMNMODAL";
 export const ADDNEWBOARD = "ADDNEWBOARD";
 export const EDITBOARD = "EDITBOARD";
 export const TOGGLETHEME = "TOGGLETHEME";
+export const SIDEBAR = "SIDEBAR";
