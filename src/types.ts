@@ -1,5 +1,13 @@
 import { type } from "os";
 import { ChangeEvent } from "react";
+
+export interface LocalStorageType {
+  theme: "dark" | "light";
+  boards: BoardType[];
+  boardIds: Id[];
+  currentBoardId: Id;
+}
+
 export type Id = string | number;
 export interface ViewTaskPayload {
   columnId: Id;

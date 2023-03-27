@@ -42,7 +42,7 @@ import {
   TOGGLETHEME,
   SIDEBAR,
 } from "./actions";
-import { StateType, Id, TasksType, BoardType } from "./types";
+import { StateType, Id, TasksType, BoardType, LocalStorageType } from "./types";
 const lightTheme = {
   body: "#f4f7fd;",
   text: "#363537",
@@ -70,18 +70,25 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
+function getLocalStorage(): LocalStorageType {
+  const data = localStorage.getItem("kanban-onos");
+  return data
+    ? JSON.parse(data)
+    : { theme: "dark", boards: [], boardIds: [], currentBoardId: "" };
+}
+
 const AppContext = createContext<StateType | null>(null);
 
 const AppProvider = ({ children }: { children: ReactNode }) => {
   const initialState: StateType = {
-    theme: "dark",
-    boards: [],
+    theme: getLocalStorage().theme,
+    boards: getLocalStorage().boards,
     showBoardMenu: false,
     viewTaskModal: false,
     modifyTask: false,
     editDeleteMenu: false,
-    boardIds: [],
-    currentBoardId: "",
+    boardIds: getLocalStorage().boardIds,
+    currentBoardId: getLocalStorage().currentBoardId,
     selectedTask: { task: null, statusIds: [], columnId: 0 },
     deleteWarning: false,
     editOrAddNewBoardModal: false,
@@ -92,12 +99,25 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const isLight = state.theme === "light";
   useEffect(() => {
+    const localStorageData = localStorage.getItem("kanban-onos");
+    if (localStorageData) return;
     const payload = JSON.parse(JSON.stringify(data));
     dispatch({
       type: LOAD,
       payload: payload.boards,
     });
   }, []);
+  useEffect(() => {
+    localStorage.setItem(
+      "kanban-onos",
+      JSON.stringify({
+        theme: state.theme,
+        boards: state.boards,
+        boardIds: state.boardIds,
+        currentBoardId: state.currentBoardId,
+      })
+    );
+  }, [state.theme, state.boards, state.boardIds, state.currentBoardId]);
   const openBoardMenu = () => dispatch({ type: OPENBOARDMENU });
   const closeModal = () => dispatch({ type: CLOSEMODAL });
   const selectBoard = (id: Id) => dispatch({ type: SELECTBOARD, payload: id });
