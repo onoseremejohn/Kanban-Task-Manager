@@ -55,6 +55,8 @@ const Wrapper = styled.section`
     outline: 1px dashed rgba(130, 143, 163, 0.4);
     outline-width: 2px;
     border-radius: var(--radius);
+    -moz-outline-radius: var(--radius);
+    -webkit-outline-radius: var(--radius);
   }
 `;
 
