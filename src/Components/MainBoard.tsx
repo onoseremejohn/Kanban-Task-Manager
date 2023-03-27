@@ -54,7 +54,7 @@ const Wrapper = styled.main<WrapperProps>`
   transition: margin-left 0.3s ease-in-out;
   @media screen and (min-width: 768px) {
     margin-left: ${({ sidebarOpen }) =>
-      sidebarOpen ? "calc(300px + 2em)" : "0"};
+      sidebarOpen ? "300px" : "0"};
   }
   &::-webkit-scrollbar {
     height: 0.4rem;
@@ -80,7 +80,7 @@ const Wrapper = styled.main<WrapperProps>`
     display: flex;
     gap: 2em;
     padding: 2em;
-    width: 105%;
+    min-width: fit-content;
   }
 `;
 

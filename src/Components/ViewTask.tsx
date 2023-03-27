@@ -50,7 +50,7 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
         }}
       >
         <h4>{title}</h4>
-        <button type="button" style={{ padding: "8px" }} onClick={toggleModify}>
+        <button className="threedots" type="button" onClick={toggleModify}>
           <MenuIcon />
         </button>
         {modifyTask && (
@@ -93,7 +93,7 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
               checked={s.isCompleted}
               onChange={(e) => toggleSubtask(e, s.id)}
             />
-            {s.title}
+            <p>{s.title}</p>
           </label>
         );
       })}
@@ -134,11 +134,6 @@ const ViewTask = forwardRef<HTMLDivElement>((props, ref) => {
 export const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.white};
   color: ${({ theme }) => theme.modalText};
-  /* position: absolute;
-  left: 50%;
-  top: 10vh;
-  transform: translateX(-50%);
-  min-height: 70vh; */
   position: relative;
   height: auto;
   max-height: 90vh;
@@ -146,6 +141,14 @@ export const Wrapper = styled.div`
   max-width: 500px;
   padding: 2.85em 1.5em;
   border-radius: var(--radius);
+  overflow-y: scroll;
+  .threedots {
+    padding: 0.4em;
+    transition: var(--transition);
+    &:hover {
+      background-color: ${({ theme }) => theme.body};
+    }
+  }
   label {
     display: flex;
     align-items: center;
@@ -156,7 +159,16 @@ export const Wrapper = styled.div`
     padding: 0.6em 1em;
     gap: 0.8em;
     margin-bottom: 0.5em;
+    cursor: pointer;
     transition: color 0.1s linear, text-decoration 0.1s linear;
+    &:hover {
+      background-color: #635fc740;
+    }
+    p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   input[type="checkbox"] {
     width: 15px;
@@ -201,11 +213,12 @@ export const Wrapper = styled.div`
     position: absolute;
     right: 3%;
     top: 1.5%;
-    background: rgba(8, 8, 8, 0.1);
     padding: 0.4em;
+    transition: var(--transition);
     border-radius: var(--radius);
-    display: grid;
-    place-content: center;
+    &:hover {
+      background-color: ${({ theme }) => theme.body};
+    }
   }
   .dropdown {
     display: flex;
@@ -229,7 +242,6 @@ export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     box-shadow: var(--bs);
-
     background-color: ${({ theme }) => theme.modifyToggle};
     color: var(--grey);
     button {
@@ -239,6 +251,9 @@ export const Wrapper = styled.div`
       text-align: left;
       padding: 0.5em 1em;
       border-radius: 50px;
+      &:hover {
+        opacity: 75%;
+      }
     }
   }
   .completed {

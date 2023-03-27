@@ -53,6 +53,8 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
     const value = e.target.value;
     if (/^\s+$/.test(value)) return;
     setInfo({ ...info, [name]: value });
+    if (name === "title" && value === "") setTitleError(true);
+    else if (name === "title" && value !== "") setTitleError(false);
   };
 
   let subtasks: TasksType["subtasks"],
@@ -65,7 +67,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
     const value = e.target.value;
     if (/^\s+$/.test(value)) return;
     const updated = subtasks.map((s) => {
-      if (s.id === id) return { ...s, title: value };
+      if (s.id === id) return { ...s, title: value, error: value === "" };
       return s;
     });
     setSubtasks(updated);
@@ -88,32 +90,46 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
     setSubtasks(updated);
   };
 
+  const [titleError, setTitleError] = useState<boolean>(false);
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const status = statusName(boards, currentBoardId, tempStatusId);
-    let payload: TasksType;
-    if (task && status && (tempStatusId || tempStatusId == 0)) {
-      payload = {
-        ...task,
-        title: info.title,
-        description: info.description,
-        status,
-        statusId: tempStatusId,
-        subtasks,
-      };
-      editTask(payload, true);
-    } else if (!task && status && (tempStatusId || tempStatusId == 0)) {
-      payload = {
-        id: nanoid(),
-        title: info.title,
-        description: info.description,
-        status,
-        statusId: tempStatusId,
-        subtasks,
-      };
-      editTask(payload, false);
+    const next = info.title !== "" && subtasks.every((s) => s.title !== "");
+    if (next) {
+      const status = statusName(boards, currentBoardId, tempStatusId);
+      let payload: TasksType;
+      if (task && status && (tempStatusId || tempStatusId == 0)) {
+        payload = {
+          ...task,
+          title: info.title,
+          description: info.description,
+          status,
+          statusId: tempStatusId,
+          subtasks,
+        };
+        editTask(payload, true);
+      } else if (!task && status && (tempStatusId || tempStatusId == 0)) {
+        payload = {
+          id: nanoid(),
+          title: info.title,
+          description: info.description,
+          status,
+          statusId: tempStatusId,
+          subtasks,
+        };
+        editTask(payload, false);
+      }
+      closeModal();
+    } else {
+      if (info.title === "") setTitleError(true);
+      setSubtasks((prevSubtasks) => {
+        const updated = prevSubtasks.map((s) => {
+          if (s.title === "") return { ...s, error: true };
+          return s;
+        });
+        return updated;
+      });
     }
-    closeModal();
   };
 
   return (
@@ -130,7 +146,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
       </button>
       <h4>{task ? "Edit Task" : "Add New Task"}</h4>
       <form onSubmit={handleSubmit}>
-        <div className="form-control">
+        <div className="form-control" style={{ position: "relative" }}>
           <label htmlFor="title">Title</label>
           <input
             type="text"
@@ -138,7 +154,10 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
             value={info.title}
             name="title"
             onChange={handleInputChange}
+            className={titleError ? "error" : ""}
+            maxLength={200}
           />
+          {titleError && <span className="errorText">Required</span>}
         </div>
         <div className="form-control">
           <label htmlFor="description">Description</label>
@@ -148,6 +167,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
             rows={4}
             value={info.description}
             onChange={handleInputChange}
+            maxLength={350}
           ></textarea>
         </div>
         <div className="form-control">
@@ -155,7 +175,12 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
 
           {subtasks.map((s) => (
             <div
-              style={{ display: "flex", alignItems: "center", gap: "1%" }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1%",
+                position: "relative",
+              }}
               key={s.id}
             >
               <input
@@ -164,6 +189,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
                 style={{ flexGrow: 1 }}
                 value={s.title}
                 onChange={(e) => handleSubtasksChange(s.id, e)}
+                className={s.error ? "error" : ""}
               />
               <button
                 type="button"
@@ -175,6 +201,11 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
               >
                 <Close />
               </button>
+              {s.error && (
+                <span className="errorText" style={{ right: "3em" }}>
+                  Required
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -230,11 +261,6 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.white};
-  /* position: absolute; */
-  /* left: 50%; */
-  /* top: 10vh; */
-  /* transform: translateX(-50%); */
-  /* min-height: 70vh; */
   position: relative;
   height: auto;
   max-height: 90vh;
@@ -250,11 +276,12 @@ const Wrapper = styled.div`
     position: absolute;
     right: 3%;
     top: 1.5%;
-    background: rgba(8, 8, 8, 0.1);
     padding: 0.4em;
+    transition: var(--transition);
     border-radius: var(--radius);
-    display: grid;
-    place-content: center;
+    &:hover {
+      background-color: ${({ theme }) => theme.body};
+    }
   }
   form {
     display: flex;
@@ -294,6 +321,15 @@ const Wrapper = styled.div`
       border-color: var(--purple);
     }
   }
+  input.error {
+    border-color: #ea5555;
+  }
+  .errorText {
+    position: absolute;
+    bottom: 0.5em;
+    right: 1em;
+    color: #ea5555;
+  }
   button {
     display: block;
   }
@@ -303,6 +339,9 @@ const Wrapper = styled.div`
     border-radius: 20px;
     color: var(--purple);
     font-weight: 600;
+    &:hover {
+      opacity: 0.9;
+    }
   }
   .status {
     display: flex;
@@ -343,11 +382,14 @@ const Wrapper = styled.div`
     }
   }
   .submit {
-    background: #635fc7;
+    background-color: var(--purple);
     padding: 0.75em 0em;
     color: white;
     font-weight: 600;
     border-radius: 20px;
+    &:hover {
+      background-color: #a8a4ff;
+    }
   }
 `;
 

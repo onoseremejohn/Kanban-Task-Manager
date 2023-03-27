@@ -7,9 +7,9 @@ const SingleColumn = ({ name, tasks, id }: ColumnType) => {
     <Wrapper>
       <div className="title">
         <span className="color"></span>
-        <span>
-          {name} ({tasks.length})
-        </span>
+        <div>
+          <span className="name">{name}</span> ({tasks.length})
+        </div>
       </div>
       {tasks.map((task) => (
         <SingleTask key={task.id} {...task} columnId={id} />
@@ -30,9 +30,14 @@ const Wrapper = styled.section`
     font-weight: var(--fw-medium);
     color: var(--grey);
     letter-spacing: 2.5px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1rem 1fr;
     gap: 0.8em;
     align-items: center;
+    > div {
+      display: flex;
+      /* grid-template-columns: 1fr auto; */
+    }
   }
   .color {
     /* display: inline-block; */
@@ -40,6 +45,11 @@ const Wrapper = styled.section`
     height: 1rem;
     border-radius: 50%;
     background-color: red;
+  }
+  span.name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .empty {
     height: 100%;

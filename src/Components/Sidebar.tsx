@@ -34,7 +34,7 @@ const Wrapper = styled.aside<WrapperProps>`
   left: 0;
   top: 5rem;
   height: calc(100vh - 5rem);
-  width: calc(300px + 2em);
+  width: 300px;
   transform: ${({ sidebarOpen }) =>
     sidebarOpen ? "translateX(0)" : "translateX(-300px) translateX(-2em)"};
   background-color: ${({ theme }) => theme.white};
@@ -76,8 +76,8 @@ const Wrapper = styled.aside<WrapperProps>`
       background-color: var(--purple);
       z-index: -1;
       top: 0;
-      left: -5vw;
-      width: calc(100% + 5vw);
+      left: -2em;
+      width: calc(100% + 2em);
       height: 100%;
       border-radius: 0 20px 20px 0;
     }

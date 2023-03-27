@@ -27,7 +27,7 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
     if (/^\s+$/.test(value)) return;
     setColumns((prevColumns) => {
       const updated = prevColumns.map((c) => {
-        if (c.id === id) return { ...c, name: value };
+        if (c.id === id) return { ...c, name: value, error: value === "" };
         return c;
       });
       return updated;
@@ -45,17 +45,32 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
     const updated = columns.filter((c) => c.id !== id);
     setColumns(updated);
   };
+
+  const [nameError, setNameError] = useState<boolean>(false);
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let payload: BoardType;
-    if (editBoardFlag || addNewColumnFlag) {
-      payload = { id: currentBoardId, name, columns: [...columns] };
-      editBoard(payload);
+    const next = name !== "" && columns.every((c) => c.name !== "");
+    if (next) {
+      if (editBoardFlag || addNewColumnFlag) {
+        payload = { id: currentBoardId, name, columns: [...columns] };
+        editBoard(payload);
+      } else {
+        payload = { id: nanoid(), name, columns: [...columns] };
+        addNewBoard(payload);
+      }
+      closeModal();
     } else {
-      payload = { id: nanoid(), name, columns: [...columns] };
-      addNewBoard(payload);
+      if (name === "") setNameError(true);
+      setColumns((prevColumns) => {
+        const updated = prevColumns.map((c) => {
+          if (c.name === "") return { ...c, error: true };
+          return c;
+        });
+        return updated;
+      });
     }
-    closeModal();
   };
   return (
     <Wrapper ref={ref}>
@@ -77,7 +92,7 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
           : "Add New Board"}
       </h4>
       <form onSubmit={handleSubmit}>
-        <div className="form-control">
+        <div className="form-control" style={{ position: "relative" }}>
           <label htmlFor="name">Name</label>
           <input
             type="text"
@@ -85,21 +100,32 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
             value={name}
             name="title"
             disabled={addNewColumnFlag}
+            maxLength={50}
             onChange={(e) => {
               if (/^\s+$/.test(e.target.value)) return;
               setName(e.target.value);
+              if (e.target.value === "") setNameError(true);
+              else setNameError(false);
             }}
+            className={nameError ? "error" : ""}
           />
+          {nameError && <span className="errorText">Required</span>}
         </div>
         <div className="form-control">
           <label htmlFor="columns">Columns</label>
           {columns.map((c) => (
-            <div className={columns.length > 1 ? "flex" : "block"} key={c.id}>
+            <div
+              className={columns.length > 1 ? "flex" : "block"}
+              key={c.id}
+              style={{ position: "relative" }}
+            >
               <input
                 type="text"
                 id="columns"
                 value={c.name}
                 onChange={(e) => handleColumnsChange(e, c.id)}
+                className={c.error ? "error" : ""}
+                maxLength={50}
               />
               {columns.length > 1 && (
                 <button
@@ -113,6 +139,14 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
                 >
                   <Close />
                 </button>
+              )}
+              {c.error && (
+                <span
+                  className="errorText"
+                  style={columns.length > 1 ? { right: "3em" } : {}}
+                >
+                  Required
+                </span>
               )}
             </div>
           ))}
@@ -142,11 +176,9 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.white};
   color: ${({ theme }) => theme.modalText};
-  position: absolute;
-  left: 50%;
-  top: 10vh;
-  transform: translateX(-50%);
-  min-height: 70vh;
+  position: relative;
+  height: auto;
+  max-height: 90vh;
   width: 85vw;
   max-width: 500px;
   padding: 2.85em 1.5em;
@@ -155,11 +187,12 @@ const Wrapper = styled.div`
     position: absolute;
     right: 3%;
     top: 1.5%;
-    background: rgba(8, 8, 8, 0.1);
     padding: 0.4em;
+    transition: var(--transition);
     border-radius: var(--radius);
-    display: grid;
-    place-content: center;
+    &:hover {
+      background-color: ${({ theme }) => theme.body};
+    }
   }
   h4 {
     color: ${({ theme }) => theme.headerText};
@@ -190,6 +223,15 @@ const Wrapper = styled.div`
       border-color: var(--purple);
     }
   }
+  input.error {
+    border-color: #ea5555;
+  }
+  .errorText {
+    position: absolute;
+    bottom: 0.5em;
+    right: 1em;
+    color: #ea5555;
+  }
   .flex {
     display: flex;
     align-items: center;
@@ -214,16 +256,22 @@ const Wrapper = styled.div`
     border-radius: 20px;
     color: var(--purple);
     font-weight: 600;
+    &:hover {
+      opacity: 0.9;
+    }
   }
   .submit {
-    background: #635fc7;
-    padding: 0.75em 1em;
+    background-color: var(--purple);
+    padding: 0.75em 0em;
     color: white;
     font-weight: 600;
     border-radius: 20px;
+    &:hover {
+      background-color: #a8a4ff;
+    }
   }
   input:disabled {
-    opacity: 50%;
+    opacity: 70%;
     cursor: not-allowed;
   }
 `;

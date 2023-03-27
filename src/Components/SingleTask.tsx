@@ -41,6 +41,14 @@ const Wrapper = styled.article`
   h4 {
     font-size: 1rem;
     font-weight: var(--fw-bold);
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    -moz-line-clamp: 4;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   p {
     color: var(--grey);

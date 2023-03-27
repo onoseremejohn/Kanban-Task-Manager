@@ -56,11 +56,9 @@ const DeleteWarning = forwardRef<HTMLDivElement>((props, ref) => {
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.white};
-  position: absolute;
-  left: 50%;
-  top: 10vh;
-  transform: translateX(-50%);
-  min-height: 70vh;
+  position: relative;
+  height: auto;
+  max-height: 90vh;
   width: 85vw;
   max-width: 500px;
   padding: 2.85em 1.5em;
@@ -72,11 +70,12 @@ const Wrapper = styled.div`
     position: absolute;
     right: 3%;
     top: 1.5%;
-    background: rgba(8, 8, 8, 0.1);
     padding: 0.4em;
+    transition: var(--transition);
     border-radius: var(--radius);
-    display: grid;
-    place-content: center;
+    &:hover {
+      background-color: ${({ theme }) => theme.body};
+    }
   }
   p {
     color: var(--grey);

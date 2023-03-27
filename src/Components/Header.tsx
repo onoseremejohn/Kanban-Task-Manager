@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import {
-  ThreeDots,
   AddTaskMobile,
   ChevronDown,
   LogoMobile,
   LogoDark,
   LogoLight,
+  MenuIcon,
 } from "../assets/Icons";
 import { useGlobalContext } from "../AppContext";
 import { findBoard } from "../helpers";
@@ -66,13 +66,17 @@ const Header = () => {
                 e.stopPropagation();
               }}
             >
-              {currentBoard || "No board Found"}
+              {currentBoard && currentBoard.length > 30
+                ? `${currentBoard.substring(0, 30)}...`
+                : currentBoard || "No board Found"}
               {"  "}
               <span className={showBoardMenu ? "dropdown rotate" : "dropdown"}>
                 <ChevronDown />
               </span>
             </button>
-            <h1 className="board font-bold">{currentBoard}</h1>
+            <h1 className="board font-bold">
+              {currentBoard || "No board Found"}
+            </h1>
           </div>
           <div>
             <button
@@ -95,7 +99,7 @@ const Header = () => {
                 e.stopPropagation();
               }}
             >
-              <ThreeDots />
+              <MenuIcon />
             </button>
           </div>
         </div>
@@ -178,6 +182,9 @@ const Wrapper = styled.header`
       display: block;
       text-align: left;
       padding: 0.5em 1em;
+      &:hover {
+        opacity: 0.8;
+      }
     }
     button.edit {
       color: #828fa3;
@@ -207,7 +214,7 @@ const Wrapper = styled.header`
       width: 100%;
       padding: 0 2em;
       display: grid;
-      grid-template-columns: calc(300px) 1fr;
+      grid-template-columns: calc(300px - 2em) 1fr;
     }
     .mobile {
       padding-left: 2em;
@@ -237,6 +244,14 @@ const Wrapper = styled.header`
     h1.board {
       display: block;
       margin: 0;
+      display: -webkit-box;
+      display: -moz-box;
+      -webkit-box-orient: vertical;
+      -moz-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      -moz-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 `;
