@@ -1,9 +1,19 @@
 import styled from "styled-components";
 import SingleTask from "./SingleTask";
 import { ColumnType } from "../types";
-const SingleColumn = ({ name, tasks, id }: ColumnType) => {
+
+const colors = [
+  "#49c4e5",
+  "#8471f2",
+  "#67e2ae",
+  "#e5a449",
+  "#2a3fdb",
+  "#c36e6e",
+];
+
+const SingleColumn = ({ name, tasks, id, index }: ColumnType) => {
   return (
-    <Wrapper>
+    <Wrapper index={index}>
       <div className="title">
         <span className="color"></span>
         <div>
@@ -17,8 +27,10 @@ const SingleColumn = ({ name, tasks, id }: ColumnType) => {
     </Wrapper>
   );
 };
-
-const Wrapper = styled.section`
+interface WrapperProps {
+  index: number;
+}
+const Wrapper = styled.section<WrapperProps>`
   display: flex;
   flex-direction: column;
   gap: 1.5em;
@@ -42,7 +54,7 @@ const Wrapper = styled.section`
     width: 1em;
     height: 1em;
     border-radius: 50%;
-    background-color: red;
+    background-color: ${({ index }) => colors[index]};
   }
   span.name {
     white-space: nowrap;

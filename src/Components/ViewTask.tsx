@@ -235,6 +235,7 @@ export const Wrapper = styled.div`
       text-align: start;
       padding: 0.5em 1em;
     }
+    margin-bottom: 2em;
   }
   .modifyTask {
     top: 105%;

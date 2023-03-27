@@ -82,6 +82,7 @@ export interface ColumnType {
   name: string;
   tasks: TasksType[];
   error?: boolean;
+  index: number;
 }
 
 export interface BoardType {

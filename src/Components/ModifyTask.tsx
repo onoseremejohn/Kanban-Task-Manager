@@ -380,6 +380,7 @@ const Wrapper = styled.div`
       text-align: start;
       padding: 0.5em 1em;
     }
+    margin-bottom: 2em;
   }
   .submit {
     background-color: var(--purple);

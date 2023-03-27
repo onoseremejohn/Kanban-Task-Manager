@@ -13,8 +13,8 @@ const MainBoard = () => {
   return (
     <Wrapper sidebarOpen={sidebarOpen}>
       <div className="move">
-        {data?.columns.map((x) => {
-          return <SingleColumn key={x.id} {...x} />;
+        {data?.columns.map((x, index) => {
+          return <SingleColumn key={x.id} {...x} index={index} />;
         })}
         {boards?.length === 0 && (
           <Empty>
@@ -31,7 +31,7 @@ const MainBoard = () => {
             </button>
           </Empty>
         )}
-        {Array.isArray(boards) && boards.length > 0 && (
+        {boards && data && boards.length > 0 && data.columns.length < 6 && (
           <NewColumn>
             <div>&nbsp;</div>
             <div
