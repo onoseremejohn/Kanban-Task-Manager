@@ -78,30 +78,32 @@ const Header = () => {
               {currentBoard || "No board Found"}
             </h1>
           </div>
-          <div>
-            <button
-              type="button"
-              className="plus"
-              onClick={(e) => {
-                modify();
-                e.stopPropagation();
-              }}
-            >
-              <AddTaskMobile />
-              <span className="text">Add New Task</span>
-            </button>
+          {boards && boards.length > 0 && (
+            <div>
+              <button
+                type="button"
+                className="plus"
+                onClick={(e) => {
+                  modify();
+                  e.stopPropagation();
+                }}
+              >
+                <AddTaskMobile />
+                <span className="text">Add New Task</span>
+              </button>
 
-            <button
-              type="button"
-              className="threedots"
-              onClick={(e) => {
-                editDeleteToggle();
-                e.stopPropagation();
-              }}
-            >
-              <MenuIcon />
-            </button>
-          </div>
+              <button
+                type="button"
+                className="threedots"
+                onClick={(e) => {
+                  editDeleteToggle();
+                  e.stopPropagation();
+                }}
+              >
+                <MenuIcon />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </Wrapper>
@@ -161,6 +163,9 @@ const Wrapper = styled.header`
   .board {
     font-size: clamp(1.2rem, 3vw, 1.5rem);
     color: ${({ theme }) => theme.text};
+  }
+  button.board {
+    text-align: left;
   }
   h1.board {
     display: none;

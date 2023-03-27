@@ -19,7 +19,16 @@ const MainBoard = () => {
         {boards?.length === 0 && (
           <Empty>
             <p>This app is empty. Create a new board to get started</p>
-            <button className="btn">Create New Board</button>
+            <button
+              className="btn"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                openAddNewOrEditBoard("add");
+              }}
+            >
+              Create New Board
+            </button>
           </Empty>
         )}
         {Array.isArray(boards) && boards.length > 0 && (
@@ -53,8 +62,7 @@ const Wrapper = styled.main<WrapperProps>`
   height: calc(100vh - 5rem);
   transition: margin-left 0.3s ease-in-out;
   @media screen and (min-width: 768px) {
-    margin-left: ${({ sidebarOpen }) =>
-      sidebarOpen ? "300px" : "0"};
+    margin-left: ${({ sidebarOpen }) => (sidebarOpen ? "300px" : "0")};
   }
   &::-webkit-scrollbar {
     height: 0.4rem;
