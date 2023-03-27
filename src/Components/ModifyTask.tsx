@@ -370,7 +370,7 @@ const Wrapper = styled.div`
     align-items: start;
     box-shadow: var(--bs);
     position: absolute;
-    bottom: calc(-100% - 0.5em);
+    top: 100%;
     width: 100%;
     background-color: ${({ theme }) => theme.modifyToggle};
     color: var(--grey);
