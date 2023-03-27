@@ -52,11 +52,8 @@ const Wrapper = styled.section`
   .empty {
     height: 100%;
     width: 100%;
-    outline: 1px dashed rgba(130, 143, 163, 0.4);
-    outline-width: 2px;
+    border: 2px dashed rgba(130, 143, 163, 0.4);
     border-radius: var(--radius);
-    -moz-outline-radius: var(--radius);
-    -webkit-outline-radius: var(--radius);
   }
 `;
 
