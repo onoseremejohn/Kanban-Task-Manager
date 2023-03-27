@@ -100,7 +100,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const isLight = state.theme === "light";
   useEffect(() => {
     const localStorageData = localStorage.getItem("kanban-onos");
-    if (localStorageData) return;
+    if (localStorageData && state.boards.length > 0) return;
     const payload = JSON.parse(JSON.stringify(data));
     dispatch({
       type: LOAD,
