@@ -46,6 +46,7 @@ const Wrapper = styled.aside<WrapperProps>`
     font-size: 1.1rem;
     margin: 0;
     padding: 0.5em 0;
+    text-align: left;
   }
   h4 {
     font-weight: var(--fw-medium);
@@ -62,7 +63,8 @@ const Wrapper = styled.aside<WrapperProps>`
     margin-bottom: 0.5em;
   }
   li {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
     align-items: center;
     gap: 1em;
     width: 100%;

@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import SingleTask from "./SingleTask";
 import { ColumnType } from "../types";
-import { divide } from "lodash";
 const SingleColumn = ({ name, tasks, id }: ColumnType) => {
   return (
     <Wrapper>
@@ -24,25 +23,24 @@ const Wrapper = styled.section`
   flex-direction: column;
   gap: 1.5em;
   min-height: calc(100vh - 8rem);
-  min-width: 17rem;
+  width: 17rem;
   .title {
     text-transform: uppercase;
     font-weight: var(--fw-medium);
     color: var(--grey);
     letter-spacing: 2.5px;
     display: grid;
-    grid-template-columns: 1rem 1fr;
+    grid-template-columns: 1em 1fr;
     gap: 0.8em;
     align-items: center;
     > div {
       display: flex;
-      /* grid-template-columns: 1fr auto; */
+      width: 13.2em;
     }
   }
   .color {
-    /* display: inline-block; */
-    width: 1rem;
-    height: 1rem;
+    width: 1em;
+    height: 1em;
     border-radius: 50%;
     background-color: red;
   }
