@@ -178,7 +178,7 @@ const Wrapper = styled.div`
   color: ${({ theme }) => theme.modalText};
   position: relative;
   height: auto;
-  max-height: 90vh;
+  max-height: 80vh;
   width: 85vw;
   max-width: 500px;
   padding: 2.85em 1.5em;
