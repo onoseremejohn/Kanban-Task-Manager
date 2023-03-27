@@ -141,6 +141,7 @@ export const Wrapper = styled.div`
   max-width: 500px;
   padding: 2.85em 1.5em;
   border-radius: var(--radius);
+  overflow-y: scroll;
   .threedots {
     padding: 0.4em;
     transition: var(--transition);
