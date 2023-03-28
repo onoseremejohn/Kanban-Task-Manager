@@ -73,16 +73,13 @@ export interface TasksType {
   description: string;
   status: string;
   statusId: Id;
-  subtasks: { title: string; isCompleted: boolean; id: Id; error?: boolean }[];
-  columnId?: Id;
+  subtasks: { title: string; isCompleted: boolean; id: Id }[];
 }
 
 export interface ColumnType {
   id: Id;
   name: string;
   tasks: TasksType[];
-  error?: boolean;
-  index: number;
 }
 
 export interface BoardType {

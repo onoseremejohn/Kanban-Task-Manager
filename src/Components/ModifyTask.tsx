@@ -12,6 +12,15 @@ import { Close, ChevronDown } from "../assets/Icons";
 import { nanoid } from "nanoid";
 import { TasksType, Id } from "../types";
 import { statusName } from "../helpers";
+
+interface SubtasksType
+  extends Array<{
+    title: string;
+    isCompleted: boolean;
+    id: Id;
+    error?: boolean;
+  }> {}
+
 const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
   const showRef = useRef<HTMLDivElement>(null);
   const {
@@ -32,7 +41,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
   const closeShow = (e: MouseEvent<HTMLDivElement>) => {
     if (show && !showRef.current?.contains(e.target as Node)) setShow(false);
   };
-  const newSubtask: TasksType["subtasks"] = [
+  const newSubtask: SubtasksType = [
     {
       id: nanoid(),
       title: "",
@@ -57,8 +66,8 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
     else if (name === "title" && value !== "") setTitleError(false);
   };
 
-  let subtasks: TasksType["subtasks"],
-    setSubtasks: React.Dispatch<React.SetStateAction<TasksType["subtasks"]>>;
+  let subtasks: SubtasksType,
+    setSubtasks: React.Dispatch<React.SetStateAction<SubtasksType>>;
   [subtasks, setSubtasks] = task
     ? useState([...task.subtasks])
     : useState([...newSubtask]);
@@ -90,7 +99,7 @@ const ModifyTask = forwardRef<HTMLDivElement>((props, ref) => {
     setSubtasks(updated);
   };
 
-  const [titleError, setTitleError] = useState<boolean>(false);
+  const [titleError, setTitleError] = useState(false);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

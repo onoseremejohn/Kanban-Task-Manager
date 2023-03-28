@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import SingleTask from "./SingleTask";
-import { ColumnType } from "../types";
+import { ColumnType as BaseColumnType } from "../types";
 
 const colors = [
   "#49c4e5",
@@ -10,6 +10,10 @@ const colors = [
   "#2a3fdb",
   "#c36e6e",
 ];
+
+interface ColumnType extends BaseColumnType {
+  index: number;
+}
 
 const SingleColumn = ({ name, tasks, id, index }: ColumnType) => {
   return (

@@ -3,8 +3,12 @@ import { forwardRef, useState, ChangeEvent, FormEvent } from "react";
 import { Close } from "../assets/Icons";
 import { useGlobalContext } from "../AppContext";
 import { nanoid } from "nanoid";
-import { BoardType, Id, ColumnType } from "../types";
+import { BoardType, Id, ColumnType as BaseColumnType } from "../types";
 import { findBoard } from "../helpers";
+
+interface ColumnType extends BaseColumnType {
+  error?: boolean;
+}
 // This is AddNewBoardModal and also Edit board Modal and also Add new column modal
 const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
   const {

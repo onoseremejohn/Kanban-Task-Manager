@@ -1,7 +1,12 @@
 import styled from "styled-components";
-import { TasksType } from "../types";
+import { TasksType as BaseTasksType, Id } from "../types";
 import { useGlobalContext } from "../AppContext";
 import { countCompletedSubtasks } from "../helpers";
+
+interface TasksType extends BaseTasksType {
+  columnId: Id;
+}
+
 const SingleTask = ({
   id: taskId,
   title,
