@@ -234,6 +234,7 @@ export const Wrapper = styled.div`
       width: 100%;
       text-align: start;
       padding: 0.5em 1em;
+      font-size: larger;
     }
     margin-bottom: 2em;
   }
