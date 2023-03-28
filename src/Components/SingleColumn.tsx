@@ -47,7 +47,7 @@ const Wrapper = styled.section<WrapperProps>`
     align-items: center;
     > div {
       display: flex;
-      width: 13.2em;
+      width: calc(17rem - 1.8em);
     }
   }
   .color {

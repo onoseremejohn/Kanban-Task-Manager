@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { useGlobalContext } from "../AppContext";
 import SingleColumn from "./SingleColumn";
+import { useState, useRef, RefObject, MouseEvent } from "react";
 const MainBoard = () => {
+  const WrapperRef: RefObject<HTMLDivElement> = useRef(null);
   const {
     boards,
     currentBoardId,
@@ -10,8 +12,54 @@ const MainBoard = () => {
   } = useGlobalContext() || {};
   const data = boards?.find((board) => board.id === currentBoardId);
 
+  const [start, setStart] = useState({ X: 0, Y: 0 });
+  const [scroll, setScroll] = useState({ X: 0, Y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMouseDown = (event: MouseEvent) => {
+    if (WrapperRef.current) {
+      setIsDragging(true);
+      setStart({
+        X: event.pageX - WrapperRef.current.offsetLeft,
+        Y: event.pageY - WrapperRef.current.offsetTop,
+      });
+      setScroll({
+        X: WrapperRef.current.scrollLeft,
+        Y: WrapperRef.current.scrollTop,
+      });
+    }
+  };
+
+  const handleMouseMove = (event: MouseEvent) => {
+    if (!isDragging) return;
+    event.preventDefault();
+    if (WrapperRef.current && isDragging) {
+      const xy = {
+        x: event.pageX - WrapperRef.current.offsetLeft,
+        y: event.pageY - WrapperRef.current.offsetTop,
+      };
+      const walk = { X: (xy.x - start.X) * 2, Y: xy.y - start.Y };
+      WrapperRef.current.scrollLeft = scroll.X - walk.X;
+      WrapperRef.current.scrollTop = scroll.Y - walk.Y;
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
   return (
-    <Wrapper sidebarOpen={sidebarOpen}>
+    <Wrapper
+      sidebarOpen={sidebarOpen}
+      ref={WrapperRef}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+    >
       <div className="move">
         {data?.columns.map((x, index) => {
           return <SingleColumn key={x.id} {...x} index={index} />;
@@ -64,23 +112,45 @@ const Wrapper = styled.main<WrapperProps>`
   @media screen and (min-width: 768px) {
     margin-left: ${({ sidebarOpen }) => (sidebarOpen ? "300px" : "0")};
   }
+  & {
+    scrollbar-width: thin;
+  }
+
   &::-webkit-scrollbar {
     height: 0.4rem;
     width: 0.7rem;
   }
 
+  &::-moz-scrollbar {
+    width: 0.7rem;
+  }
   &::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    background: transparent;
+  }
+  &::-moz-scrollbar-track {
+    background: transparent;
   }
   &::-webkit-scrollbar-thumb {
     background: var(--grey);
+
+    border-radius: 10px;
+    transition: var(--transition);
+  }
+  &::-moz-scrollbar-thumb {
+    background: var(--grey);
     border-radius: 10px;
   }
+
   &::-webkit-scrollbar-thumb:hover {
     background-color: var(--purple);
   }
+  &::-moz-scrollbar-thumb:hover {
+    background-color: var(--purple);
+  }
   &::-webkit-scrollbar-corner {
+    display: none;
+  }
+  &::-moz-scrollbar-corner {
     display: none;
   }
   .move {
