@@ -94,10 +94,20 @@ const Wrapper = styled.div`
   .delete {
     background-color: #ea5555;
     color: white;
+    &:hover {
+      color: #ea5555;
+      background-color: white;
+      outline: 1px solid #ea5555;
+    }
   }
   .cancel {
     background-color: #f0effa;
     color: var(--purple);
+    &:hover {
+      color: var(--purple);
+      background-color: white;
+      outline: 1px solid var(--purple);
+    }
   }
 `;
 

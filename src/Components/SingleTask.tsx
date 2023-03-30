@@ -2,32 +2,42 @@ import styled from "styled-components";
 import { TasksType as BaseTasksType, Id } from "../types";
 import { useGlobalContext } from "../AppContext";
 import { countCompletedSubtasks } from "../helpers";
-
+import { Draggable } from "@hello-pangea/dnd";
 interface TasksType extends BaseTasksType {
   columnId: Id;
+  index: number;
 }
 
 const SingleTask = ({
   id: taskId,
   title,
   subtasks,
-  columnId = 0,
+  columnId = '0',
+  index,
 }: TasksType) => {
   const { openTask = () => {} } = useGlobalContext() || {};
   return (
-    <Wrapper
-      role="button"
-      aria-label="view task"
-      onClick={(e) => {
-        openTask(columnId, taskId);
-        e.stopPropagation();
-      }}
-    >
-      <h4>{title}</h4>
-      <p className="font-bold">
-        {countCompletedSubtasks(subtasks)} of {subtasks.length} Subtasks
-      </p>
-    </Wrapper>
+    <Draggable draggableId={taskId.toString()} index={index}>
+      {(provided) => (
+        <Wrapper
+          role="button"
+          aria-label="view task"
+          onClick={(e) => {
+            openTask(columnId, taskId);
+            e.stopPropagation();
+          }}
+          onMouseDown={(e) => e.stopPropagation()}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <h4>{title}</h4>
+          <p className="font-bold">
+            {countCompletedSubtasks(subtasks)} of {subtasks.length} Subtasks
+          </p>
+        </Wrapper>
+      )}
+    </Draggable>
   );
 };
 
@@ -39,10 +49,10 @@ const Wrapper = styled.article`
   border-radius: var(--radius);
   border: 1px solid #8686861a;
   background-color: ${({ theme }) => theme.white};
-  cursor: grab;
-  &:hover {
+  &:hover{
     opacity: 50%;
   }
+  cursor: grab;
   h4 {
     font-size: 1rem;
     font-weight: var(--fw-bold);

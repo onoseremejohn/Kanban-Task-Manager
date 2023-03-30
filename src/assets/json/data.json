@@ -5,7 +5,7 @@
       "name": "Platform Launch",
       "columns": [
         {
-          "id": 0,
+          "id": "0",
           "name": "Todo",
           "tasks": [
             {
@@ -87,7 +87,7 @@
           ]
         },
         {
-          "id": 1,
+          "id": "1",
           "name": "Doing",
           "tasks": [
             {
@@ -227,7 +227,7 @@
           ]
         },
         {
-          "id": 2,
+          "id": "2",
           "name": "Done",
           "tasks": [
             {
@@ -362,7 +362,7 @@
       "name": "Marketing Plan",
       "columns": [
         {
-          "id": 0,
+          "id": "0",
           "name": "Todo",
           "tasks": [
             {
@@ -460,7 +460,7 @@
           ]
         },
         {
-          "id": 1,
+          "id": "1",
           "name": "Doing",
           "tasks": []
         }
@@ -472,7 +472,7 @@
       "columns": [
         {
           "name": "Now",
-          "id": 0,
+          "id": "0",
           "tasks": [
             {
               "id": 20,
@@ -520,12 +520,12 @@
           ]
         },
         {
-          "id": 1,
+          "id": "1",
           "name": "Next",
           "tasks": []
         },
         {
-          "id": 2,
+          "id": "2",
           "name": "Later",
           "tasks": []
         }

@@ -22,6 +22,18 @@ export interface EditTaskPayload {
   val: Boolean;
 }
 
+export interface SameColumnReorderPayload {
+  taskId: string;
+  columnId: string;
+  destinationIndex: number;
+}
+export interface DiffColumnReorderPayload {
+  taskId: string;
+  sourceColId: string;
+  destColId: string;
+  destinationIndex: number;
+}
+
 export interface ActionType {
   type: string;
   payload?:
@@ -29,7 +41,9 @@ export interface ActionType {
     | Id
     | ToggleSubtaskPayload
     | EditTaskPayload
-    | BoardType;
+    | BoardType
+    | SameColumnReorderPayload
+    | DiffColumnReorderPayload;
 }
 
 export interface StateType {
@@ -63,6 +77,8 @@ export interface StateType {
   editBoard?(a: BoardType): void;
   toggleTheme?(): void;
   sidebar?(a: "open" | "close"): void;
+  sameColumnReorder?(a: string, b: string, c: number): void;
+  diffColumnReorder?(a: string, b: string, c: string, d: number): void;
 }
 
 export type ReducerType<S, A> = (state: S, action: A) => StateType;

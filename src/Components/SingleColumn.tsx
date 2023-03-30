@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import SingleTask from "./SingleTask";
 import { ColumnType as BaseColumnType } from "../types";
-
+import { Droppable } from "@hello-pangea/dnd";
 const colors = [
   "#49c4e5",
   "#8471f2",
@@ -15,6 +15,13 @@ interface ColumnType extends BaseColumnType {
   index: number;
 }
 
+const TaskList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  height: 100%;
+`;
+
 const SingleColumn = ({ name, tasks, id, index }: ColumnType) => {
   return (
     <Wrapper index={index}>
@@ -24,10 +31,22 @@ const SingleColumn = ({ name, tasks, id, index }: ColumnType) => {
           <span className="name">{name}</span> ({tasks.length})
         </div>
       </div>
-      {tasks.map((task) => (
-        <SingleTask key={task.id} {...task} columnId={id} />
-      ))}
-      {tasks.length === 0 && <div className="empty"></div>}
+      <Droppable droppableId={id.toString()}>
+        {(provided) => (
+          <TaskList {...provided.droppableProps} ref={provided.innerRef}>
+            {tasks.map((task, i) => (
+              <SingleTask
+                key={task.id}
+                {...task}
+                columnId={id.toString()}
+                index={i}
+              />
+            ))}
+            {tasks.length === 0 && <div className="empty"></div>}
+            {provided.placeholder}
+          </TaskList>
+        )}
+      </Droppable>
     </Wrapper>
   );
 };
@@ -66,7 +85,7 @@ const Wrapper = styled.section<WrapperProps>`
     text-overflow: ellipsis;
   }
   .empty {
-    height: 100%;
+    min-height: 100%;
     width: 100%;
     border: 2px dashed rgba(130, 143, 163, 0.4);
     border-radius: var(--radius);

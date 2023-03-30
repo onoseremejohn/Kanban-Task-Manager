@@ -16,7 +16,6 @@ import {
   ReactNode,
   useReducer,
   useEffect,
-  useState,
   ChangeEvent,
 } from "react";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
@@ -42,6 +41,8 @@ import {
   ADDNEWCOLUMNMODAL,
   TOGGLETHEME,
   SIDEBAR,
+  SAMECOLUMNREORDER,
+  DIFFCOLUMNREORDER,
 } from "./actions";
 import { StateType, Id, TasksType, BoardType, LocalStorageType } from "./types";
 const lightTheme = {
@@ -154,6 +155,27 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const sidebar = (val: "open" | "close") =>
     dispatch({ type: SIDEBAR, payload: val });
 
+  const sameColumnReorder = (
+    taskId: string,
+    columnId: string,
+    destinationIndex: number
+  ) =>
+    dispatch({
+      type: SAMECOLUMNREORDER,
+      payload: { taskId, columnId, destinationIndex },
+    });
+
+  const diffColumnReorder = (
+    taskId: string,
+    sourceColId: string,
+    destColId: string,
+    destinationIndex: number
+  ) =>
+    dispatch({
+      type: DIFFCOLUMNREORDER,
+      payload: { taskId, sourceColId, destColId, destinationIndex },
+    });
+
   return (
     <AppContext.Provider
       value={{
@@ -174,6 +196,8 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         editBoard,
         toggleTheme,
         sidebar,
+        sameColumnReorder,
+        diffColumnReorder
       }}
     >
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

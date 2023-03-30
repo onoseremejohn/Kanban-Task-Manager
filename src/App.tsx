@@ -4,6 +4,7 @@ import Overlay from "./Components/Overlay";
 import Sidebar from "./Components/Sidebar";
 import MainBoard from "./Components/MainBoard";
 import { ShowSidebar } from "./assets/Icons";
+
 export default () => {
   const { sidebarOpen, sidebar = () => {} } = useGlobalContext() || {};
 

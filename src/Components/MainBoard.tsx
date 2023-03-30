@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { useGlobalContext } from "../AppContext";
 import SingleColumn from "./SingleColumn";
 import { useState, useRef, RefObject, MouseEvent } from "react";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+
 const MainBoard = () => {
   const WrapperRef: RefObject<HTMLDivElement> = useRef(null);
   const {
@@ -9,6 +11,8 @@ const MainBoard = () => {
     currentBoardId,
     sidebarOpen,
     openAddNewOrEditBoard = () => {},
+    sameColumnReorder = () => {},
+    diffColumnReorder = () => {},
   } = useGlobalContext() || {};
   const data = boards?.find((board) => board.id === currentBoardId);
 
@@ -51,52 +55,73 @@ const MainBoard = () => {
     setIsDragging(false);
   };
 
+  const onDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+    if (!destination) return;
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    )
+      return;
+    if (source.droppableId === destination.droppableId)
+      sameColumnReorder(draggableId, source.droppableId, destination.index);
+    if (source.droppableId !== destination.droppableId)
+      diffColumnReorder(
+        draggableId,
+        source.droppableId,
+        destination.droppableId,
+        destination.index
+      );
+  };
+
   return (
-    <Wrapper
-      sidebarOpen={sidebarOpen}
-      ref={WrapperRef}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div className="move">
-        {data?.columns.map((x, index) => {
-          return <SingleColumn key={x.id} {...x} index={index} />;
-        })}
-        {boards?.length === 0 && (
-          <Empty>
-            <p>This app is empty. Create a new board to get started</p>
-            <button
-              className="btn"
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                openAddNewOrEditBoard("add");
-              }}
-            >
-              Create New Board
-            </button>
-          </Empty>
-        )}
-        {boards && data && boards.length > 0 && data.columns.length < 6 && (
-          <NewColumn>
-            <div>&nbsp;</div>
-            <div
-              className="gradient"
-              role="button"
-              aria-label="Add new column"
-              onClick={(e) => {
-                e.stopPropagation();
-                openAddNewOrEditBoard("column");
-              }}
-            >
-              <p className="absolute-center font-bold">+ New Column</p>
-            </div>
-          </NewColumn>
-        )}
-      </div>
-    </Wrapper>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Wrapper
+        sidebarOpen={sidebarOpen}
+        ref={WrapperRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="move">
+          {data?.columns.map((x, index) => {
+            return <SingleColumn key={x.id} {...x} index={index} />;
+          })}
+          {boards?.length === 0 && (
+            <Empty>
+              <p>This app is empty. Create a new board to get started</p>
+              <button
+                className="btn"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openAddNewOrEditBoard("add");
+                }}
+              >
+                Create New Board
+              </button>
+            </Empty>
+          )}
+          {boards && data && boards.length > 0 && data.columns.length < 6 && (
+            <NewColumn>
+              <div>&nbsp;</div>
+              <div
+                className="gradient"
+                role="button"
+                aria-label="Add new column"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openAddNewOrEditBoard("column");
+                }}
+              >
+                <p className="absolute-center font-bold">+ New Column</p>
+              </div>
+            </NewColumn>
+          )}
+        </div>
+      </Wrapper>
+    </DragDropContext>
   );
 };
 

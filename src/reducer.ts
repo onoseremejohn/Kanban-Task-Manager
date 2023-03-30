@@ -8,6 +8,9 @@ import {
   TasksType,
   Id,
   EditTaskPayload,
+  SameColumnReorderPayload,
+  ColumnType,
+  DiffColumnReorderPayload,
 } from "./types";
 import {
   LOAD,
@@ -30,9 +33,10 @@ import {
   ADDNEWCOLUMNMODAL,
   TOGGLETHEME,
   SIDEBAR,
+  SAMECOLUMNREORDER,
+  DIFFCOLUMNREORDER,
 } from "./actions";
-// import { cloneDeep } from "lodash";
-import { statusName } from "./helpers";
+import { statusName, getColumn } from "./helpers";
 
 const reducer: ReducerType<StateType, ActionType> = (
   state: StateType,
@@ -70,8 +74,8 @@ const reducer: ReducerType<StateType, ActionType> = (
     }
     case SELECTBOARD: {
       let { currentBoardId } = state;
-      const id = action.payload;
-      if ((id || id == 0) && typeof id !== "object") {
+      const id = action.payload as Id;
+      if (id || id == 0 || id == "0") {
         currentBoardId = id;
       }
       return { ...state, currentBoardId };
@@ -345,6 +349,68 @@ const reducer: ReducerType<StateType, ActionType> = (
       let val = action.payload as "open" | "close";
       if (val === "open") return { ...state, sidebarOpen: true };
       if (val === "close") return { ...state, sidebarOpen: false };
+    }
+    case SAMECOLUMNREORDER: {
+      const { boards, currentBoardId } = state;
+      const { taskId, columnId, destinationIndex } =
+        action.payload as SameColumnReorderPayload;
+      const column = getColumn(boards, currentBoardId, columnId);
+      if (!column) return state;
+      let tasks = [...column.tasks];
+      const movedTask = column.tasks.find((t) => t.id.toString() === taskId);
+      if (!movedTask) return state;
+      tasks = tasks.filter((t) => t.id.toString() !== taskId);
+      tasks.splice(destinationIndex, 0, movedTask);
+      let newColumn: ColumnType;
+      newColumn = { ...column, tasks: [...tasks] };
+      let newBoards = [...boards];
+      newBoards = newBoards.map((b) => {
+        if (b.id === currentBoardId)
+          return {
+            ...b,
+            columns: b.columns.map((c) => {
+              if (c.id.toString() === columnId) return newColumn;
+              return c;
+            }),
+          };
+        return b;
+      });
+      return { ...state, boards: newBoards };
+    }
+
+    case DIFFCOLUMNREORDER: {
+      const { boards, currentBoardId } = state;
+      const { taskId, sourceColId, destColId, destinationIndex } =
+        action.payload as DiffColumnReorderPayload;
+      const oldColumn = getColumn(boards, currentBoardId, sourceColId);
+      const newColumn = getColumn(boards, currentBoardId, destColId);
+      if (!oldColumn || !newColumn) return state;
+      let filteredOldColumn: ColumnType = {
+        ...oldColumn,
+        tasks: oldColumn.tasks.filter((t) => t.id.toString() !== taskId),
+      };
+      let tasks = [...newColumn.tasks];
+      let movedTask = oldColumn.tasks.find((t) => t.id.toString() === taskId);
+      const newStatusName = statusName(boards, currentBoardId, destColId);
+      if (!movedTask || !newStatusName) return state;
+      movedTask = { ...movedTask, status: newStatusName, statusId: destColId };
+      tasks.splice(destinationIndex, 0, movedTask);
+      let newUpdatedColumn: ColumnType = { ...newColumn, tasks: [...tasks] };
+      let newBoards = [...boards];
+
+      newBoards = newBoards.map((b) => {
+        if (b.id === currentBoardId)
+          return {
+            ...b,
+            columns: b.columns.map((c) => {
+              if (c.id === sourceColId) return filteredOldColumn;
+              if (c.id === destColId) return newUpdatedColumn;
+              return c;
+            }),
+          };
+        return b;
+      });
+      return { ...state, boards: newBoards };
     }
     default:
       throw new Error(`No Matching "${action.type}" - action type`);
