@@ -20,7 +20,6 @@ const SingleTask = ({
     <Draggable draggableId={taskId.toString()} index={index}>
       {(provided, snapshot) => (
         <Wrapper
-          role="button"
           aria-label="view task"
           onClick={(e) => {
             openTask(columnId, taskId);
@@ -31,6 +30,7 @@ const SingleTask = ({
           isDragging={snapshot.isDragging}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          aria-roledescription="Press spacebar to lift task"
         >
           <h4>{title}</h4>
           <p className="font-bold">
@@ -56,12 +56,12 @@ const Wrapper = styled.article<WrapperProps>`
   background-color: ${({ theme, isDragging }) =>
     isDragging ? "#67e2ae" : theme.white};
   &:hover {
-    opacity: 50%;
+    opacity: ${({ isDragging }) => (isDragging ? 1 : 0.5)};
   }
-  &:focus, &:focus-visible { 
+  &:focus,
+  &:focus-visible {
     outline: 1px solid red;
   }
-  cursor: grab;
   h4 {
     font-size: 1rem;
     font-weight: var(--fw-bold);

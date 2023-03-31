@@ -43,6 +43,7 @@ import {
   SIDEBAR,
   SAMECOLUMNREORDER,
   DIFFCOLUMNREORDER,
+  REORDERCOLUMNS,
 } from "./actions";
 import { StateType, Id, TasksType, BoardType, LocalStorageType } from "./types";
 const lightTheme = {
@@ -176,6 +177,12 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
       payload: { taskId, sourceColId, destColId, destinationIndex },
     });
 
+  const reOrderColumns = (colId: string, destinationIndex: number) =>
+    dispatch({
+      type: REORDERCOLUMNS,
+      payload: { colId, destinationIndex },
+    });
+
   return (
     <AppContext.Provider
       value={{
@@ -197,7 +204,8 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         toggleTheme,
         sidebar,
         sameColumnReorder,
-        diffColumnReorder
+        diffColumnReorder,
+        reOrderColumns,
       }}
     >
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

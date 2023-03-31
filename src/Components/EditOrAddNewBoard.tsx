@@ -6,6 +6,15 @@ import { nanoid } from "nanoid";
 import { BoardType, Id, ColumnType as BaseColumnType } from "../types";
 import { findBoard } from "../helpers";
 
+const colors = [
+  "#49c4e5",
+  "#8471f2",
+  "#67e2ae",
+  "#e5a449",
+  "#2a3fdb",
+  "#c36e6e",
+];
+
 interface ColumnType extends BaseColumnType {
   error?: boolean;
 }
@@ -25,7 +34,14 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
   const [columns, setColumns] =
     editBoardFlag || addNewColumnFlag
       ? useState<ColumnType[]>(currentColumns ? [...currentColumns] : [])
-      : useState<ColumnType[]>([{ id: nanoid(), name: "", tasks: [] }]);
+      : useState<ColumnType[]>([
+          {
+            id: nanoid(),
+            name: "",
+            tasks: [],
+            color: colors[0],
+          },
+        ]);
   const handleColumnsChange = (e: ChangeEvent<HTMLInputElement>, id: Id) => {
     const value = e.target.value;
     if (/^\s+$/.test(value)) return;
@@ -43,7 +59,10 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
       : useState("");
   const addNewColumn = () => {
     if (columns.length >= 6) return;
-    setColumns([...columns, { id: nanoid(), name: "", tasks: [] }]);
+    setColumns([
+      ...columns,
+      { id: nanoid(), name: "", tasks: [], color: colors[columns.length] },
+    ]);
   };
   const deleteColumn = (id: Id) => {
     const updated = columns.filter((c) => c.id !== id);

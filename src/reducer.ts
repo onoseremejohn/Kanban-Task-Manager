@@ -11,6 +11,7 @@ import {
   SameColumnReorderPayload,
   ColumnType,
   DiffColumnReorderPayload,
+  reOrderColumnsPayload,
 } from "./types";
 import {
   LOAD,
@@ -35,8 +36,19 @@ import {
   SIDEBAR,
   SAMECOLUMNREORDER,
   DIFFCOLUMNREORDER,
+  REORDERCOLUMNS,
 } from "./actions";
 import { statusName, getColumn } from "./helpers";
+import { nanoid } from "nanoid";
+
+const colors = [
+  "#49c4e5",
+  "#8471f2",
+  "#67e2ae",
+  "#e5a449",
+  "#2a3fdb",
+  "#c36e6e",
+];
 
 const reducer: ReducerType<StateType, ActionType> = (
   state: StateType,
@@ -47,6 +59,14 @@ const reducer: ReducerType<StateType, ActionType> = (
       let boards: BoardType[] = [];
       if (Array.isArray(action.payload)) {
         boards = action.payload;
+        boards = boards.map((b) => {
+          return {
+            ...b,
+            columns: b.columns.map((c, index) => {
+              return { ...c, id: nanoid(), color: colors[index] };
+            }),
+          };
+        });
       }
       const boardIds = boards.map((b) => b.id);
       return {
@@ -408,6 +428,22 @@ const reducer: ReducerType<StateType, ActionType> = (
               return c;
             }),
           };
+        return b;
+      });
+      return { ...state, boards: newBoards };
+    }
+    case REORDERCOLUMNS: {
+      const { boards, currentBoardId } = state;
+      const { colId, destinationIndex } =
+        action.payload as reOrderColumnsPayload;
+      const columns = boards.find((b) => b.id === currentBoardId)?.columns;
+      const movedColumn = getColumn(boards, currentBoardId, colId);
+      if (!columns || !movedColumn) return state;
+      const newColumns: ColumnType[] = columns.filter((c) => c.id !== colId);
+      newColumns.splice(destinationIndex, 0, movedColumn);
+      let newBoards = [...boards];
+      newBoards = newBoards.map((b) => {
+        if (b.id === currentBoardId) return { ...b, columns: newColumns };
         return b;
       });
       return { ...state, boards: newBoards };

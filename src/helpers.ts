@@ -13,7 +13,7 @@ interface StatusName {
     | undefined;
 }
 interface GetColumn {
-  (a: BoardType[], b: Id, c: Id): ColumnType | undefined;
+  (a: BoardType[], b: Id, c: string): ColumnType | undefined;
 }
 
 export const findBoard: FindBoard = (boards, id) => {
@@ -29,8 +29,6 @@ export const statusName: StatusName = (boards, boardId, id) => {
 
 export const getColumn: GetColumn = (boards, boardId, columnId) => {
   const board = boards.find((b) => b.id === boardId);
-  const col = board?.columns.find(
-    (c) => c.id.toString() === columnId.toString()
-  );
+  const col = board?.columns.find((c) => c.id === columnId);
   return col;
 };

@@ -1,11 +1,18 @@
 import styled from "styled-components";
 import { useGlobalContext } from "../AppContext";
 import SingleColumn from "./SingleColumn";
-import { useState, useRef, RefObject, MouseEvent } from "react";
-import { DragDropContext, DragStart, DropResult } from "@hello-pangea/dnd";
+import { useState, useRef, MouseEvent } from "react";
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+  DragStart,
+  ResponderProvided,
+  DragUpdate,
+} from "@hello-pangea/dnd";
 
 const MainBoard = () => {
-  const WrapperRef: RefObject<HTMLDivElement> = useRef(null);
+  const WrapperRef = useRef<HTMLElement | null>(null);
   const {
     boards,
     currentBoardId,
@@ -13,6 +20,7 @@ const MainBoard = () => {
     openAddNewOrEditBoard = () => {},
     sameColumnReorder = () => {},
     diffColumnReorder = () => {},
+    reOrderColumns = () => {},
   } = useGlobalContext() || {};
   const data = boards?.find((board) => board.id === currentBoardId);
 
@@ -56,71 +64,115 @@ const MainBoard = () => {
   };
 
   const onDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId } = result;
+    const { destination, source, draggableId, type } = result;
     if (!destination) return;
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
     )
       return;
-    if (source.droppableId === destination.droppableId)
-      sameColumnReorder(draggableId, source.droppableId, destination.index);
-    if (source.droppableId !== destination.droppableId)
-      diffColumnReorder(
-        draggableId,
-        source.droppableId,
-        destination.droppableId,
-        destination.index
-      );
+    if (type === "COLUMN") {
+      reOrderColumns(draggableId, destination.index);
+    } else {
+      if (source.droppableId === destination.droppableId)
+        sameColumnReorder(draggableId, source.droppableId, destination.index);
+      if (source.droppableId !== destination.droppableId)
+        diffColumnReorder(
+          draggableId,
+          source.droppableId,
+          destination.droppableId,
+          destination.index
+        );
+    }
+  };
+
+  const onDragStart = (start: DragStart, provided: ResponderProvided) => {
+    const message =
+      start.type === "TASK"
+        ? `You have lifted the task in position ${start.source.index + 1}`
+        : `You have lifted the status in position ${start.source.index + 1}`;
+    provided.announce(message);
+  };
+  const onDragUpdate = (update: DragUpdate, provided: ResponderProvided) => {
+    let message = "";
+    if (!update.destination) {
+      message = "You are currently not over a droppable area";
+    } else if (update.type === "TASK") {
+      message = `You have moved the task to position ${
+        update.destination.index + 1
+      }`;
+    } else if (update.type === "COLUMN") {
+      message = `You have moved the status to position ${
+        update.destination.index + 1
+      }`;
+    }
+    provided.announce(message);
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Wrapper
-        sidebarOpen={sidebarOpen}
-        ref={WrapperRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-      >
-        <div className="move">
-          {data?.columns.map((x, index) => {
-            return <SingleColumn key={x.id} {...x} index={index} />;
-          })}
-          {boards?.length === 0 && (
-            <Empty>
-              <p>This app is empty. Create a new board to get started</p>
-              <button
-                className="btn"
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openAddNewOrEditBoard("add");
-                }}
-              >
-                Create New Board
-              </button>
-            </Empty>
-          )}
-          {boards && data && boards.length > 0 && data.columns.length < 6 && (
-            <NewColumn>
-              <div>&nbsp;</div>
-              <div
-                className="gradient"
-                role="button"
-                aria-label="Add new column"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openAddNewOrEditBoard("column");
-                }}
-              >
-                <p className="absolute-center font-bold">+ New Column</p>
-              </div>
-            </NewColumn>
-          )}
-        </div>
-      </Wrapper>
+    <DragDropContext
+      onDragEnd={onDragEnd}
+      onDragStart={onDragStart}
+      onDragUpdate={onDragUpdate}
+    >
+      <Droppable droppableId="all-columns" direction="horizontal" type="COLUMN">
+        {(provided) => (
+          <Wrapper
+            sidebarOpen={sidebarOpen}
+            ref={(el) => {
+              WrapperRef.current = el;
+              provided.innerRef(el);
+            }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            {...provided.droppableProps}
+          >
+            <div className="move">
+              {data?.columns.map((x, index) => {
+                return <SingleColumn key={x.id} {...x} index={index} />;
+              })}
+
+              {boards?.length === 0 && (
+                <Empty>
+                  <p>This app is empty. Create a new board to get started</p>
+                  <button
+                    className="btn"
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openAddNewOrEditBoard("add");
+                    }}
+                  >
+                    Create New Board
+                  </button>
+                </Empty>
+              )}
+              {provided.placeholder}
+              {boards &&
+                data &&
+                boards.length > 0 &&
+                data.columns.length < 6 && (
+                  <NewColumn>
+                    <div>&nbsp;</div>
+                    <div
+                      className="gradient"
+                      role="button"
+                      aria-label="Add new column"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openAddNewOrEditBoard("column");
+                      }}
+                    >
+                      <p className="absolute-center font-bold">+ New Column</p>
+                    </div>
+                  </NewColumn>
+                )}
+            </div>
+          </Wrapper>
+        )}
+      </Droppable>
     </DragDropContext>
   );
 };
@@ -182,7 +234,7 @@ const Wrapper = styled.main<WrapperProps>`
     cursor: move;
     display: flex;
     gap: 2em;
-    padding: 2em;
+    padding: 1em;
     min-width: fit-content;
   }
 `;

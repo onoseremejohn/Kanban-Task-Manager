@@ -1,4 +1,3 @@
-import { type } from "os";
 import { ChangeEvent } from "react";
 
 export interface LocalStorageType {
@@ -33,6 +32,10 @@ export interface DiffColumnReorderPayload {
   destColId: string;
   destinationIndex: number;
 }
+export interface reOrderColumnsPayload {
+  colId: string;
+  destinationIndex: number;
+}
 
 export interface ActionType {
   type: string;
@@ -43,7 +46,8 @@ export interface ActionType {
     | EditTaskPayload
     | BoardType
     | SameColumnReorderPayload
-    | DiffColumnReorderPayload;
+    | DiffColumnReorderPayload
+    | reOrderColumnsPayload;
 }
 
 export interface StateType {
@@ -79,6 +83,7 @@ export interface StateType {
   sidebar?(a: "open" | "close"): void;
   sameColumnReorder?(a: string, b: string, c: number): void;
   diffColumnReorder?(a: string, b: string, c: string, d: number): void;
+  reOrderColumns?(a: string, b: number): void;
 }
 
 export type ReducerType<S, A> = (state: S, action: A) => StateType;
@@ -95,6 +100,7 @@ export interface TasksType {
 export interface ColumnType {
   id: string;
   name: string;
+  color: string;
   tasks: TasksType[];
 }
 
