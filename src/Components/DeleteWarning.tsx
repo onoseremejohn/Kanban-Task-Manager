@@ -104,8 +104,8 @@ const Wrapper = styled.div`
     background-color: #f0effa;
     color: var(--purple);
     &:hover {
-      color: var(--purple);
-      background-color: white;
+      color: ${({ theme }) => theme.cancelColor};
+      background-color: ${({ theme }) => theme.cancelBg};
       outline: 1px solid var(--purple);
     }
   }

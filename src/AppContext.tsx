@@ -7,6 +7,8 @@ declare module "styled-components" {
     modifyToggle: string;
     headerText: string;
     borderLine: string;
+    cancelColor: string;
+    cancelBg: string;
   }
 }
 import data from "./assets/json/data.json";
@@ -54,6 +56,8 @@ const lightTheme = {
   headerText: "#000",
   modifyToggle: "#fff",
   borderLine: "#e4ebfa",
+  cancelColor: "#635fc7",
+  cancelBg: "#fff",
 };
 
 const darkTheme = {
@@ -64,6 +68,8 @@ const darkTheme = {
   headerText: "#fff",
   modifyToggle: "#20212c",
   borderLine: "#3e3f4e",
+  cancelColor: "#fff",
+  cancelBg: "transparent",
 };
 
 const GlobalStyles = createGlobalStyle`
@@ -74,7 +80,7 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 function getLocalStorage(): LocalStorageType {
-  const data = localStorage.getItem("kanban-onos");
+  const data = localStorage.getItem("onos-kanban");
   return data
     ? JSON.parse(data)
     : { theme: "dark", boards: [], boardIds: [], currentBoardId: "" };
@@ -102,7 +108,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const isLight = state.theme === "light";
   useEffect(() => {
-    const localStorageData = localStorage.getItem("kanban-onos");
+    const localStorageData = localStorage.getItem("onos-kanban");
     if (localStorageData && state.boards.length > 0) return;
     const payload = JSON.parse(JSON.stringify(data));
     dispatch({
@@ -112,7 +118,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   }, []);
   useEffect(() => {
     localStorage.setItem(
-      "kanban-onos",
+      "onos-kanban",
       JSON.stringify({
         theme: state.theme,
         boards: state.boards,
