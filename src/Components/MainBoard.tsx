@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useGlobalContext } from "../AppContext";
 import SingleColumn from "./SingleColumn";
 import { useState, useRef, RefObject, MouseEvent } from "react";
-import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+import { DragDropContext, DragStart, DropResult } from "@hello-pangea/dnd";
 
 const MainBoard = () => {
   const WrapperRef: RefObject<HTMLDivElement> = useRef(null);

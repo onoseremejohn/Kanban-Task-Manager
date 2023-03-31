@@ -15,11 +15,19 @@ interface ColumnType extends BaseColumnType {
   index: number;
 }
 
-const TaskList = styled.div`
+interface TaskListProps {
+  isDraggingOver: boolean;
+}
+
+const TaskList = styled.div<TaskListProps>`
   display: flex;
   flex-direction: column;
   gap: 1.5em;
   height: 100%;
+  background-color: ${({ isDraggingOver }) =>
+    isDraggingOver ? "var(--grey)" : "none"};
+  transition: var(--transition);
+  border-radius: var(--radius);
 `;
 
 const SingleColumn = ({ name, tasks, id, index }: ColumnType) => {
@@ -31,16 +39,15 @@ const SingleColumn = ({ name, tasks, id, index }: ColumnType) => {
           <span className="name">{name}</span> ({tasks.length})
         </div>
       </div>
-      <Droppable droppableId={id.toString()}>
-        {(provided) => (
-          <TaskList {...provided.droppableProps} ref={provided.innerRef}>
+      <Droppable droppableId={id} type="TASK">
+        {(provided, snapshot) => (
+          <TaskList
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            isDraggingOver={snapshot.isDraggingOver}
+          >
             {tasks.map((task, i) => (
-              <SingleTask
-                key={task.id}
-                {...task}
-                columnId={id.toString()}
-                index={i}
-              />
+              <SingleTask key={task.id} {...task} columnId={id} index={i} />
             ))}
             {tasks.length === 0 && <div className="empty"></div>}
             {provided.placeholder}

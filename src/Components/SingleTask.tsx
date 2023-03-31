@@ -4,7 +4,7 @@ import { useGlobalContext } from "../AppContext";
 import { countCompletedSubtasks } from "../helpers";
 import { Draggable } from "@hello-pangea/dnd";
 interface TasksType extends BaseTasksType {
-  columnId: Id;
+  columnId: string;
   index: number;
 }
 
@@ -12,13 +12,13 @@ const SingleTask = ({
   id: taskId,
   title,
   subtasks,
-  columnId = '0',
+  columnId = "0",
   index,
 }: TasksType) => {
   const { openTask = () => {} } = useGlobalContext() || {};
   return (
     <Draggable draggableId={taskId.toString()} index={index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <Wrapper
           role="button"
           aria-label="view task"
@@ -28,6 +28,7 @@ const SingleTask = ({
           }}
           onMouseDown={(e) => e.stopPropagation()}
           ref={provided.innerRef}
+          isDragging={snapshot.isDragging}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
@@ -41,16 +42,24 @@ const SingleTask = ({
   );
 };
 
-const Wrapper = styled.article`
+interface WrapperProps {
+  isDragging: boolean;
+}
+
+const Wrapper = styled.article<WrapperProps>`
   box-shadow: var(--bs);
   padding: 1.5rem 1rem;
   width: 17rem;
   font-size: 1rem;
   border-radius: var(--radius);
   border: 1px solid #8686861a;
-  background-color: ${({ theme }) => theme.white};
-  &:hover{
+  background-color: ${({ theme, isDragging }) =>
+    isDragging ? "#67e2ae" : theme.white};
+  &:hover {
     opacity: 50%;
+  }
+  &:focus, &:focus-visible { 
+    outline: 1px solid red;
   }
   cursor: grab;
   h4 {

@@ -93,7 +93,7 @@ export interface TasksType {
 }
 
 export interface ColumnType {
-  id: Id;
+  id: string;
   name: string;
   tasks: TasksType[];
 }
