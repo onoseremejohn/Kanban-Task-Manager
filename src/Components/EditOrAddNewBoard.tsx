@@ -16,7 +16,8 @@ const colors = [
 ];
 
 interface ColumnType extends BaseColumnType {
-  error?: boolean;
+  empty?: boolean;
+  used?: boolean;
 }
 // This is AddNewBoardModal and also Edit board Modal and also Add new column modal
 const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
@@ -27,9 +28,18 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
     addNewColumnFlag,
     editBoard = () => {},
     boards,
+    boardIds,
     currentBoardId = 0,
   } = useGlobalContext() || {};
   const currentBoardName = findBoard(boards, currentBoardId) ?? "";
+  let allBoards: (string | undefined)[] | undefined = [];
+  if (addNewColumnFlag || editBoardFlag) {
+    allBoards = boardIds
+      ?.filter((id) => id !== currentBoardId)
+      .map((x) => findBoard(boards, x));
+  } else {
+    allBoards = boardIds?.map((id) => findBoard(boards, id));
+  }
   const currentColumns = boards?.find((b) => b.id === currentBoardId)?.columns;
   const [columns, setColumns] =
     editBoardFlag || addNewColumnFlag
@@ -46,12 +56,39 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
     const value = e.target.value;
     if (/^\s+$/.test(value)) return;
     setColumns((prevColumns) => {
-      const updated = prevColumns.map((c) => {
-        if (c.id === id) return { ...c, name: value, error: value === "" };
-        return c;
-      });
+      let updated: ColumnType[];
+      if (value === "") {
+        updated = prevColumns.map((c) => {
+          if (c.id === id)
+            return { ...c, name: value, empty: true, used: false };
+          return c;
+        });
+      } else if (
+        columns.some((c) => c.name.toLowerCase() === value.toLowerCase())
+      ) {
+        updated = prevColumns.map((c) => {
+          if (c.id === id)
+            return { ...c, name: value, empty: false, used: true };
+          return c;
+        });
+      } else {
+        updated = prevColumns.map((c) => {
+          if (c.id === id)
+            return { ...c, name: value, empty: false, used: false };
+          return c;
+        });
+      }
       return updated;
     });
+  };
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\s+$/.test(value)) return;
+    setName(value);
+    if (value === "") setNameError({ empty: true, used: false });
+    else if (allBoards?.some((b) => b === value.toLowerCase()))
+      setNameError({ empty: false, used: true });
+    else setNameError({ empty: false, used: false });
   };
   const [name, setName] =
     editBoardFlag || addNewColumnFlag
@@ -65,16 +102,34 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
     ]);
   };
   const deleteColumn = (id: Id) => {
-    const updated = columns.filter((c) => c.id !== id);
+    let updated = columns.filter((c) => c.id !== id);
+    const usedNames = new Set();
+    updated = updated.map((c) => {
+      if (c.name === "") return c;
+      else if (usedNames.has(c.name.toLowerCase())) {
+        return { ...c, used: true };
+      } else {
+        usedNames.add(c.name.toLowerCase());
+        return { ...c, used: false };
+      }
+    });
     setColumns(updated);
   };
-
-  const [nameError, setNameError] = useState<boolean>(false);
-
+  const [nameError, setNameError] = useState({ empty: false, used: false });
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let payload: BoardType;
-    const next = name !== "" && columns.every((c) => c.name !== "");
+    let nameNext =
+      name !== "" && !allBoards?.some((b) => b === name.toLowerCase());
+    const columnsNext = columns.every(
+      (c) =>
+        c.name !== "" &&
+        !columns.some(
+          (column) =>
+            column.name.toLowerCase() === c.name.toLowerCase() && column !== c
+        )
+    );
+    let next = nameNext && columnsNext;
     if (next) {
       if (editBoardFlag || addNewColumnFlag) {
         payload = { id: currentBoardId, name, columns: [...columns] };
@@ -85,14 +140,25 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
       }
       closeModal();
     } else {
-      if (name === "") setNameError(true);
-      setColumns((prevColumns) => {
-        const updated = prevColumns.map((c) => {
-          if (c.name === "") return { ...c, error: true };
-          return c;
+      if (!nameNext) {
+        if (name === "") setNameError({ empty: true, used: false });
+        if (allBoards?.some((b) => b === name.toLowerCase()))
+          setNameError({ empty: false, used: true });
+      }
+      if (!columnsNext) {
+        const usedNames = new Set();
+        const updatedColumns = columns.map((c) => {
+          if (c.name === "") {
+            return { ...c, empty: true, used: false };
+          } else if (usedNames.has(c.name.toLowerCase())) {
+            return { ...c, empty: false, used: true };
+          } else {
+            usedNames.add(c.name.toLowerCase());
+            return { ...c, empty: false, used: false };
+          }
         });
-        return updated;
-      });
+        setColumns(updatedColumns);
+      }
     }
   };
   return (
@@ -124,15 +190,14 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
             name="title"
             disabled={addNewColumnFlag}
             maxLength={50}
-            onChange={(e) => {
-              if (/^\s+$/.test(e.target.value)) return;
-              setName(e.target.value);
-              if (e.target.value === "") setNameError(true);
-              else setNameError(false);
-            }}
-            className={nameError ? "error" : ""}
+            onChange={handleNameChange}
+            className={nameError.empty || nameError.used ? "error" : ""}
           />
-          {nameError && <span className="errorText">Required</span>}
+          {(nameError.empty || nameError.used) && (
+            <span className="errorText">
+              {nameError.empty ? "Required" : "Used"}
+            </span>
+          )}
         </div>
         <div className="form-control">
           <label htmlFor="columns">Columns</label>
@@ -147,7 +212,7 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
                 id="columns"
                 value={c.name}
                 onChange={(e) => handleColumnsChange(e, c.id)}
-                className={c.error ? "error" : ""}
+                className={c.empty || c.used ? "error" : ""}
                 maxLength={50}
               />
               {columns.length > 1 && (
@@ -163,12 +228,12 @@ const EditOrAddNewBoard = forwardRef<HTMLDivElement>((props, ref) => {
                   <Close />
                 </button>
               )}
-              {c.error && (
+              {(c.empty || c.used) && (
                 <span
                   className="errorText"
                   style={columns.length > 1 ? { right: "3em" } : {}}
                 >
-                  Required
+                  {c.empty ? "Required" : "Used"}
                 </span>
               )}
             </div>

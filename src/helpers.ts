@@ -18,7 +18,7 @@ interface GetColumn {
 
 export const findBoard: FindBoard = (boards, id) => {
   const board = boards?.find((b) => b.id === id);
-  return board?.name;
+  return board?.name.toLowerCase();
 };
 
 export const statusName: StatusName = (boards, boardId, id) => {

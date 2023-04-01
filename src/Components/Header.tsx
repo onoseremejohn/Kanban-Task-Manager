@@ -60,6 +60,7 @@ const Header = () => {
             </span>
             <button
               type="button"
+              style={{ textTransform: "capitalize" }}
               className="board font-bold"
               onClick={(e) => {
                 openBoardMenu();

@@ -28,7 +28,11 @@ const BoardNames = () => {
               className={currentBoardId === id ? "active" : ""}
             >
               <BoardIcon />
-              <button className="font-bold" type="button">
+              <button
+                className="font-bold"
+                type="button"
+                style={{ textTransform: "capitalize" }}
+              >
                 {name}
               </button>
             </li>
