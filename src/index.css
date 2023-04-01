@@ -47,12 +47,6 @@ body {
   line-height: 1.5;
   font-size: 0.875rem;
 }
-body {
-  -webkit-user-select: none; 
-  -moz-user-select: none; 
-  -ms-user-select: none; 
-  user-select: none; 
-}
 
 img {
   max-width: 100%;
