@@ -22,6 +22,9 @@ const Wrapper = styled.div`
   padding: 1.2em 2em;
   width: 80vw;
   max-width: 300px;
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
   button {
     color: inherit;
     font-size: 1.1rem;

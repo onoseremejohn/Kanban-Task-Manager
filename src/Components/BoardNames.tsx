@@ -14,7 +14,7 @@ const BoardNames = () => {
   return (
     <>
       <h4>ALL BOARDS ({boardIds?.length})</h4>
-      <ul>
+      <ul className="boardlist">
         {boardIds?.map((id) => {
           const name = findBoard(boards, id);
           return (

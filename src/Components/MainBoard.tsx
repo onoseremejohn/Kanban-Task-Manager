@@ -118,6 +118,7 @@ const MainBoard = () => {
       <Droppable droppableId="all-columns" direction="horizontal" type="COLUMN">
         {(provided) => (
           <Wrapper
+            className="scrollbar-style"
             sidebarOpen={sidebarOpen}
             ref={(el) => {
               WrapperRef.current = el;
@@ -189,47 +190,11 @@ const Wrapper = styled.main<WrapperProps>`
   @media screen and (min-width: 768px) {
     margin-left: ${({ sidebarOpen }) => (sidebarOpen ? "300px" : "0")};
   }
-  & {
-    scrollbar-width: thin;
-  }
 
   &::-webkit-scrollbar {
     height: 0.4rem;
-    width: 0.7rem;
   }
 
-  &::-moz-scrollbar {
-    width: 0.7rem;
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  &::-moz-scrollbar-track {
-    background: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: var(--grey);
-
-    border-radius: 10px;
-    transition: var(--transition);
-  }
-  &::-moz-scrollbar-thumb {
-    background: var(--grey);
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: var(--purple);
-  }
-  &::-moz-scrollbar-thumb:hover {
-    background-color: var(--purple);
-  }
-  &::-webkit-scrollbar-corner {
-    display: none;
-  }
-  &::-moz-scrollbar-corner {
-    display: none;
-  }
   .move {
     cursor: move;
     display: flex;

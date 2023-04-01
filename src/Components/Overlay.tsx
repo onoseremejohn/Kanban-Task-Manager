@@ -54,13 +54,14 @@ const Wrapper = styled.div<WrapperProps>`
   position: fixed;
   inset: 0;
   visibility: ${({ show }) => (show ? "visible" : "hidden")};
-  z-index: ${({ show }) => (show ? "200" : "1")};
+  z-index: ${({ show }) => (show ? "200" : "")};
   transition: var(--transition);
   background-color: ${({ show }) =>
     show ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0)"};
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-x: hidden;
 `;
 
 export default Overlay;

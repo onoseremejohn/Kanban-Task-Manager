@@ -4,47 +4,54 @@ import ModeToggler from "./ModeToggler";
 import { HideSidebar } from "../assets/Icons";
 import { useGlobalContext } from "../AppContext";
 const Sidebar = () => {
-  const { sidebar = () => {}, sidebarOpen } = useGlobalContext() || {};
+  const { sidebar = () => {}, sidebarOpen, theme } = useGlobalContext() || {};
   return (
-    <Wrapper sidebarOpen={sidebarOpen}>
-      <BoardNames />
-      <ModeToggler />
-      <button
-        type="button"
-        className="hide-sidebar font-bold"
-        onClick={() => sidebar("close")}
-      >
-        <HideSidebar /> Hide Sidebar
-      </button>
+    <Wrapper sidebarOpen={sidebarOpen} th={theme} className="scrollbar-style">
+      <div>
+        <BoardNames />
+      </div>
+      <div>
+        <ModeToggler />
+        <button
+          type="button"
+          className="hide-sidebar font-bold"
+          onClick={() => sidebar("close")}
+        >
+          <HideSidebar /> Hide Sidebar
+        </button>
+      </div>
     </Wrapper>
   );
 };
 
 interface WrapperProps {
   sidebarOpen?: boolean;
+  th?: "light" | "dark";
 }
 
 const Wrapper = styled.aside<WrapperProps>`
   display: none;
   @media screen and (min-width: 768px) {
-    display: block;
+    display: flex;
   }
   position: fixed;
   z-index: 4;
   left: 0;
   top: 5rem;
-  height: calc(100vh - 5rem);
+  height: calc(100% - 5rem);
   width: 300px;
   transform: ${({ sidebarOpen }) =>
     sidebarOpen ? "translateX(0)" : "translateX(-300px) translateX(-2em)"};
   background-color: ${({ theme }) => theme.white};
   border-right: 1px solid ${({ theme }) => theme.borderLine};
-  padding: 2em;
+  padding: 2em 0;
   transition: transform 0.3s ease-in-out;
-  button {
+  overflow-x: hidden;
+  flex-direction: column;
+  justify-content: space-between;
+  button:not(.social) {
     color: inherit;
     font-size: 1.1rem;
-    margin: 0;
     padding: 0.5em 0;
     text-align: left;
   }
@@ -52,22 +59,25 @@ const Wrapper = styled.aside<WrapperProps>`
     font-weight: var(--fw-medium);
     font-size: 1rem;
     margin: 0;
-    margin-bottom: 1.5em;
+    margin-bottom: 1em;
     color: var(--grey);
+    padding-left: 2em;
   }
-  ul {
+  ul.boardlist {
     display: flex;
     flex-direction: column;
     align-items: start;
     gap: 0.5em;
     margin-bottom: 0.5em;
   }
-  li {
+  ul.boardlist li,
+  li.create {
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
     gap: 1em;
     width: 100%;
+    padding-left: 2em;
   }
   .active {
     position: relative;
@@ -79,12 +89,12 @@ const Wrapper = styled.aside<WrapperProps>`
       z-index: -1;
       top: 0;
       left: -2em;
-      width: calc(100% + 2em);
+      width: calc(100% + 1em);
       height: 100%;
       border-radius: 0 20px 20px 0;
     }
   }
-  ul li:not(.active) {
+  ul.boardlist li:not(.active) {
     position: relative;
     color: var(--grey);
     &:hover {
@@ -96,7 +106,7 @@ const Wrapper = styled.aside<WrapperProps>`
         z-index: -1;
         top: 0;
         left: -5vw;
-        width: calc(100% + 5vw);
+        width: calc(100% + 4vw);
         height: 100%;
         border-radius: 0 20px 20px 0;
       }
@@ -111,8 +121,7 @@ const Wrapper = styled.aside<WrapperProps>`
     }
   }
   .icons {
-    position: absolute;
-    bottom: 12%;
+    margin: 0 auto;
     border-radius: var(--radius);
     background-color: ${({ theme }) => theme.body};
     display: flex;
@@ -120,6 +129,7 @@ const Wrapper = styled.aside<WrapperProps>`
     justify-content: center;
     padding: 1em 0;
     width: calc(100% - 4em);
+    margin-bottom: 0.5em;
   }
   .switch {
     position: relative;
@@ -131,7 +141,8 @@ const Wrapper = styled.aside<WrapperProps>`
     span {
       position: absolute;
       inset: 0;
-      background-color: var(--purple);
+      background-color: ${({ th }) =>
+        th === "light" ? "var(--purple)" : "var(--grey)"};
       border-radius: 20px;
       &::before {
         position: absolute;
@@ -154,11 +165,8 @@ const Wrapper = styled.aside<WrapperProps>`
     }
   }
   .hide-sidebar {
-    position: absolute;
-    bottom: 5%;
-    width: auto;
-    color: var(--grey);
-    text-align: left;
+    padding-left: 2em !important;
+    color: var(--grey) !important;
     transition: var(--transition);
     &:hover {
       opacity: 0.5;

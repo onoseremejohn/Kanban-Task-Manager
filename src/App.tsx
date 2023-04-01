@@ -4,6 +4,7 @@ import Overlay from "./Components/Overlay";
 import Sidebar from "./Components/Sidebar";
 import MainBoard from "./Components/MainBoard";
 import { ShowSidebar } from "./assets/Icons";
+import SocialLinks from "./Components/SocialLinks";
 
 export default () => {
   const { sidebarOpen, sidebar = () => {} } = useGlobalContext() || {};
@@ -22,6 +23,7 @@ export default () => {
       >
         <ShowSidebar />
       </button>
+      <SocialLinks />
       <Overlay />
     </>
   );

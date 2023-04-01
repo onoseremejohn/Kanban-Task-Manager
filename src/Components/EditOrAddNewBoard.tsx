@@ -206,6 +206,7 @@ const Wrapper = styled.div`
   max-width: 500px;
   padding: 2.85em 1.5em;
   border-radius: var(--radius);
+  overflow-x: hidden;
   .close {
     position: absolute;
     right: 3%;
