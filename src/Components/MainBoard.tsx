@@ -234,7 +234,7 @@ const Wrapper = styled.main<WrapperProps>`
     cursor: move;
     display: flex;
     gap: 2em;
-    padding: 1em;
+    padding: 2em;
     min-width: fit-content;
   }
 `;

@@ -12,6 +12,7 @@ Your users should be able to:
 - [x] Hide/show the board sidebar
 - [x] Toggle the theme between light/dark modes
 - [x] **Bonus**: Allow users to drag and drop tasks to change their status and re-order them in a column
+- [x] **Bonus**: Allow users to drag and drop columns/statuses to change their positions and re-order them on the board
 - [x] **Bonus**: Keep track of any changes, even after refreshing the browser (`localStorage` could be used for this if you're not building out a full-stack app)
 - [ ] **Bonus**: Build this project as a full-stack application
 
