@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
+import { useGlobalContext } from "../AppContext";
 const SocialLinks = () => {
+  const { sidebarOpen } = useGlobalContext() || {};
   return (
-    <Wrapper className="social-container">
+    <Wrapper className="social-container" sidebarOpen={sidebarOpen}>
       <ul>
         <li>
           <a
@@ -42,9 +44,10 @@ const SocialLinks = () => {
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ sidebarOpen?: boolean }>`
   position: fixed;
-  left: 3px;
+  left: ${({ sidebarOpen }) => (sidebarOpen ? "303px" : "3px")};
+  transition: var(--transition);
   top: 30%;
   ul {
     display: flex;

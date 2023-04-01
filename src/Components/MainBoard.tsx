@@ -187,6 +187,10 @@ const Wrapper = styled.main<WrapperProps>`
   overflow: scroll;
   height: calc(100vh - 5rem);
   transition: margin-left 0.3s ease-in-out;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   @media screen and (min-width: 768px) {
     margin-left: ${({ sidebarOpen }) => (sidebarOpen ? "300px" : "0")};
   }
