@@ -49,6 +49,9 @@ const Wrapper = styled.div<{ sidebarOpen?: boolean }>`
   left: ${({ sidebarOpen }) => (sidebarOpen ? "303px" : "3px")};
   transition: var(--transition);
   top: 30%;
+  @media screen and (max-width: 768px) {
+    left: 3px;
+  }
   ul {
     display: flex;
     flex-direction: column;
