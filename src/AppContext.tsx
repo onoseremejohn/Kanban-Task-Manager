@@ -83,7 +83,7 @@ function getLocalStorage(): LocalStorageType {
   const data = localStorage.getItem("onos-kanban");
   return data
     ? JSON.parse(data)
-    : { theme: "dark", boards: [], boardIds: [], currentBoardId: "" };
+    : { theme: "light", boards: [], boardIds: [], currentBoardId: "" };
 }
 
 const AppContext = createContext<StateType | null>(null);
