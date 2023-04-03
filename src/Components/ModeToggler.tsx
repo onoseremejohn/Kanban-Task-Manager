@@ -11,7 +11,13 @@ const ModeToggler = () => {
           onChange={toggleTheme}
           checked={theme === "light"}
         />
-        <span></span>
+        <span
+          style={{
+            backgroundColor: `${
+              theme === "light" ? "var(--purple)" : "var(--grey)"
+            }`,
+          }}
+        ></span>
       </label>
       <SunIcon />
     </div>

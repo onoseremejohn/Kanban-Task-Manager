@@ -4,9 +4,9 @@ import ModeToggler from "./ModeToggler";
 import { HideSidebar } from "../assets/Icons";
 import { useGlobalContext } from "../AppContext";
 const Sidebar = () => {
-  const { sidebar = () => {}, sidebarOpen, theme } = useGlobalContext() || {};
+  const { sidebar = () => {}, sidebarOpen } = useGlobalContext() || {};
   return (
-    <Wrapper sidebarOpen={sidebarOpen} th={theme} className="scrollbar-style">
+    <Wrapper sidebarOpen={sidebarOpen} className="scrollbar-style">
       <div>
         <BoardNames />
       </div>
@@ -26,7 +26,6 @@ const Sidebar = () => {
 
 interface WrapperProps {
   sidebarOpen?: boolean;
-  th?: "light" | "dark";
 }
 
 const Wrapper = styled.aside<WrapperProps>`
@@ -141,8 +140,6 @@ const Wrapper = styled.aside<WrapperProps>`
     span {
       position: absolute;
       inset: 0;
-      background-color: ${({ th }) =>
-        th === "light" ? "var(--purple)" : "var(--grey)"};
       border-radius: 20px;
       &::before {
         position: absolute;

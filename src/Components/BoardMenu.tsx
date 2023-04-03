@@ -110,7 +110,6 @@ const Wrapper = styled.div`
     span {
       position: absolute;
       inset: 0;
-      background-color: var(--purple);
       border-radius: 20px;
       &::before {
         position: absolute;
